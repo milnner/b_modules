@@ -13,7 +13,7 @@ func NewJWTokenizator() *JWTokenizator {
 	return &JWTokenizator{}
 }
 
-func (u *JWTokenizator) GenerateToken(mapClaims map[string]interface{}) (string, error) {
+func (u JWTokenizator) GenerateToken(mapClaims map[string]interface{}) (string, error) {
 	claims := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims(mapClaims))
 
 	tokenString, err := claims.SignedString(u.jwtSecretKey)
@@ -24,7 +24,7 @@ func (u *JWTokenizator) GenerateToken(mapClaims map[string]interface{}) (string,
 	return tokenString, nil
 }
 
-func (u *JWTokenizator) ValidateToken(tokenString string) (*map[string]interface{}, error) {
+func (u JWTokenizator) ValidateToken(tokenString string) (*map[string]interface{}, error) {
 	token, err := jwt.ParseWithClaims(tokenString, &jwt.MapClaims{}, func(token *jwt.Token) (interface{}, error) {
 		return u.jwtSecretKey, nil
 	})
