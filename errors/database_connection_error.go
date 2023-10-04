@@ -1,4 +1,4 @@
-package modules
+package errors
 
 type databaseConnectionError struct {
 }
