@@ -3,12 +3,15 @@ package environment
 import (
 	"os"
 
-	errapp "github.com/milnner/b_modules/errors"
-
 	_ "github.com/go-sql-driver/mysql"
+	errapp "github.com/milnner/b_modules/errors"
 )
 
 var Environment *environment
+
+func NewEnvironment() {
+	Environment = &environment{}
+}
 
 type environment struct {
 	jwtSecretKey *string
