@@ -9,8 +9,8 @@ type JWTokenizator struct {
 	jwtSecretKey []byte
 }
 
-func NewJWTokenizator() *JWTokenizator {
-	return &JWTokenizator{}
+func NewJWTokenizator(jwtSecretKey string) *JWTokenizator {
+	return &JWTokenizator{jwtSecretKey: []byte(jwtSecretKey)}
 }
 
 func (u JWTokenizator) GenerateToken(mapClaims map[string]interface{}) (string, error) {
