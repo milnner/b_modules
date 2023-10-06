@@ -23,6 +23,10 @@ type environment struct {
 }
 
 func (u *environment) InitEnvironment(logPathEnvVariable, jwtSecretKeyEnvVariable, certFile, keyFile, addr string, debug bool) {
+	u.addr = addr
+	if addr == "" {
+		panic("undefined addr")
+	}
 	u.debug = debug
 
 	u.logPath = new(string)
