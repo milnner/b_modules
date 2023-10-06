@@ -22,7 +22,9 @@ type environment struct {
 	debug        bool
 }
 
-func (u *environment) InitEnvironment(logPathEnvVariable, jwtSecretKeyEnvVariable string) {
+func (u *environment) InitEnvironment(logPathEnvVariable, jwtSecretKeyEnvVariable, certFile, keyFile, addr string, debug bool) {
+	u.debug = debug
+
 	u.logPath = new(string)
 	*(u.logPath) = os.Getenv(logPathEnvVariable)
 
@@ -38,14 +40,19 @@ func (u *environment) InitEnvironment(logPathEnvVariable, jwtSecretKeyEnvVariabl
 	if *(u.jwtSecretKey) == "" {
 		panic(errapp.NewNotExistEnvironmentVariableError(jwtSecretKeyEnvVariable))
 	}
+	if !u.debug {
+		u.certFile = certFile
+		if u.certFile == "" {
+			panic("Certificate file is required for HTTPS")
+		}
 
-	if u.certFile == "" {
-		panic("Certificate file is required for HTTPS")
+		u.keyFile = keyFile
+		if u.keyFile == "" {
+			panic("Key file is required for HTTPS")
+
+		}
 	}
 
-	if u.keyFile == "" {
-		panic("Key file is required for HTTPS")
-	}
 }
 
 func (u *environment) GetAddr() string {
