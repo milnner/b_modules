@@ -14,6 +14,7 @@ type ImageActivity struct {
 	Blob       []byte
 	LastUpdate time.Time
 	Activated  uint8
+	Position   int
 }
 
 func NewImageActivity(id, areaId int, title string, blob []byte, last_update time.Time, activityId int) *ImageActivity {

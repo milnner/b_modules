@@ -9,6 +9,7 @@ type TextActivity struct {
 	Blob       []byte // encoding - utf-8
 	LastUpdate time.Time
 	Activated  uint8
+	Position   int
 }
 
 func NewTextActivity(id int, areaId int, title string, blob []byte, lastUpdate time.Time, activated uint8) *TextActivity {

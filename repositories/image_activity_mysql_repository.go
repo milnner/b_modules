@@ -3,7 +3,6 @@ package repositories
 import (
 	"database/sql"
 	"encoding/hex"
-	"fmt"
 	"time"
 
 	errapp "github.com/milnner/b_modules/errors"
@@ -31,8 +30,8 @@ func (u *ImageActivityMySQLRepository) Insert(imageActivity *models.ImageActivit
 }
 
 func (u *ImageActivityMySQLRepository) Delete(imageActivity *models.ImageActivity) (err error) {
-	query := "DELETE FROM `image_activities` WHERE `id`=?"
-	_, err = u.db.Exec(query, imageActivity.Id)
+	query := "UPDATE `image_activities` SET `activated`=? WHERE `id`=?"
+	_, err = u.db.Exec(query, 0, imageActivity.Id)
 	if err != nil {
 		return err
 	}
@@ -74,8 +73,7 @@ func (u *ImageActivityMySQLRepository) GetImageActivityById(imageActivity *model
 func (u *ImageActivityMySQLRepository) GetImageActivitiesByIds(imageActivities []models.ImageActivity) (err error) {
 
 	for i := 0; i < len(imageActivities); i++ {
-		err = u.GetImageActivityById(&imageActivities[i])
-		if err != nil {
+		if err = u.GetImageActivityById(&imageActivities[i]); err != nil {
 			return err
 		}
 	}
@@ -90,9 +88,8 @@ func (u *ImageActivityMySQLRepository) GetImageActivitiesByAreaId(area *models.A
 	)
 
 	query := "SELECT `id`, `area_id`, `title`, `_blob`, `last_update`, `activated` FROM `image_activities` WHERE area_id=?"
-	rows, err = u.db.Query(query, area.Id)
 
-	if err != nil {
+	if rows, err = u.db.Query(query, area.Id); err != nil {
 		return nil, err
 	}
 
@@ -103,7 +100,6 @@ func (u *ImageActivityMySQLRepository) GetImageActivitiesByAreaId(area *models.A
 		if imageActivity.LastUpdate, err = time.Parse(time.DateTime, lastUpdate); err != nil {
 			return nil, err
 		}
-		fmt.Println(imageActivities)
 		imageActivities = append(imageActivities, imageActivity)
 	}
 	return imageActivities, nil
