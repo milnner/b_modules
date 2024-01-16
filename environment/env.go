@@ -57,6 +57,30 @@ type databaseConnections struct {
 	selectArea string
 	deleteArea string
 	updateArea string
+
+	// Image Activities
+	insertImgAct string
+	selectImgAct string
+	deleteImgAct string
+	updateImgAct string
+
+	// Text Activities
+	insertTxtAct string
+	selectTxtAct string
+	deleteTxtAct string
+	updateTxtAct string
+
+	// One Question N Answer Activity
+	insertOneQuestionNAnswerActivity string
+	selectOneQuestionNAnswerActivity string
+	deleteOneQuestionNAnswerActivity string
+	updateOneQuestionNAnswerActivity string
+
+	// Answer N To One Activity
+	insertAnswerNToOneActivity string
+	selectAnswerNToOneActivity string
+	deleteAnswerNToOneActivity string
+	updateAnswerNToOneActivity string
 }
 
 func NewEnvironmentVariables(logPath string, jwtSecretKeyEnvVariable string) *environmentVariables {
@@ -231,6 +255,22 @@ func (u *databaseConnections) GetUpdateClass() string {
 	return u.updateClass
 }
 
+func (u *databaseConnections) SetSelectClass(connString string) {
+	u.selectClass = connString
+}
+
+func (u *databaseConnections) SetInsertClass(connString string) {
+	u.insertClass = connString
+}
+
+func (u *databaseConnections) SetDeleteClass(connString string) {
+	u.deleteClass = connString
+}
+
+func (u *databaseConnections) SetUpdateClass(connString string) {
+	u.updateClass = connString
+}
+
 func (u *databaseConnections) GetSelectUser() string {
 	return u.selectUser
 }
@@ -245,6 +285,22 @@ func (u *databaseConnections) GetDeleteUser() string {
 
 func (u *databaseConnections) GetUpdateUser() string {
 	return u.updateUser
+}
+
+func (u *databaseConnections) SetSelectUser(connString string) {
+	u.selectUser = connString
+}
+
+func (u *databaseConnections) SetInsertUser(connString string) {
+	u.insertUser = connString
+}
+
+func (u *databaseConnections) SetDeleteUser(connString string) {
+	u.deleteUser = connString
+}
+
+func (u *databaseConnections) SetUpdateUser(connString string) {
+	u.updateUser = connString
 }
 
 func (u *databaseConnections) GetInsertContent() string {
@@ -263,6 +319,22 @@ func (u *databaseConnections) GetUpdateContent() string {
 	return u.updateContent
 }
 
+func (u *databaseConnections) SetSelectContent(connString string) {
+	u.selectContent = connString
+}
+
+func (u *databaseConnections) SetInsertContent(connString string) {
+	u.insertContent = connString
+}
+
+func (u *databaseConnections) SetDeleteContent(connString string) {
+	u.deleteContent = connString
+}
+
+func (u *databaseConnections) SetUpdateContent(connString string) {
+	u.updateContent = connString
+}
+
 func (u *databaseConnections) GetInsertArea() string {
 	return u.insertArea
 }
@@ -279,6 +351,125 @@ func (u *databaseConnections) GetUpdateArea() string {
 	return u.updateArea
 }
 
+func (db *databaseConnections) SetInsertArea(area string) {
+	db.insertArea = area
+}
+
+func (db *databaseConnections) SetSelectArea(area string) {
+	db.selectArea = area
+}
+
+func (db *databaseConnections) SetDeleteArea(area string) {
+	db.deleteArea = area
+}
+
+func (db *databaseConnections) SetUpdateArea(area string) {
+	db.updateArea = area
+}
+
+func (db *databaseConnections) GetInserImgAct() string {
+	return db.insertImgAct
+}
+func (db *databaseConnections) GetSelectImgAct() string {
+	return db.selectImgAct
+}
+func (db *databaseConnections) GetDeleteImgAct() string {
+	return db.deleteImgAct
+}
+func (db *databaseConnections) GetUpdateImgAct() string {
+	return db.updateImgAct
+}
+
+func (db *databaseConnections) SetInsertImgAct(imgAct string) {
+	db.insertImgAct = imgAct
+}
+func (db *databaseConnections) SetSelectImgAct(imgAct string) {
+	db.selectImgAct = imgAct
+}
+func (db *databaseConnections) SetDeleteImgAct(imgAct string) {
+	db.deleteImgAct = imgAct
+}
+func (db *databaseConnections) SetUpdateImgAct(imgAct string) {
+	db.updateImgAct = imgAct
+}
+
+func (db *databaseConnections) GetInsertTxtAct() string {
+	return db.insertTxtAct
+}
+func (db *databaseConnections) GetSelectTxtAct() string {
+	return db.selectTxtAct
+}
+func (db *databaseConnections) GetDeleteTxtAct() string {
+	return db.deleteTxtAct
+}
+func (db *databaseConnections) GetUpdateTxtAct() string {
+	return db.updateTxtAct
+}
+
+func (db *databaseConnections) SetInsertTxtAct(txtAct string) {
+	db.insertTxtAct = txtAct
+}
+func (db *databaseConnections) SetSelectTxtAct(txtAct string) {
+	db.selectTxtAct = txtAct
+}
+func (db *databaseConnections) SetDeleteTxtAct(txtAct string) {
+	db.deleteTxtAct = txtAct
+}
+func (db *databaseConnections) SetUpdateTxtAct(txtAct string) {
+	db.updateTxtAct = txtAct
+}
+
+func (db *databaseConnections) GetInsertOneQuestionNAnswerActivity() string {
+	return db.insertOneQuestionNAnswerActivity
+}
+func (db *databaseConnections) GetSelectOneQuestionNAnswerActivity() string {
+	return db.selectOneQuestionNAnswerActivity
+}
+func (db *databaseConnections) GetDeleteOneQuestionNAnswerActivity() string {
+	return db.deleteOneQuestionNAnswerActivity
+}
+func (db *databaseConnections) GetUpdateOneQuestionNAnswerActivity() string {
+	return db.updateOneQuestionNAnswerActivity
+}
+
+func (db *databaseConnections) SetInsertOneQuestionNAnswerActivity(oneQuestionNAnswerActivity string) {
+	db.insertOneQuestionNAnswerActivity = oneQuestionNAnswerActivity
+}
+func (db *databaseConnections) SetSelectOneQuestionNAnswerActivity(oneQuestionNAnswerActivity string) {
+	db.selectOneQuestionNAnswerActivity = oneQuestionNAnswerActivity
+}
+func (db *databaseConnections) SetDeleteOneQuestionNAnswerActivity(oneQuestionNAnswerActivity string) {
+	db.deleteOneQuestionNAnswerActivity = oneQuestionNAnswerActivity
+}
+func (db *databaseConnections) SetUpdateOneQuestionNAnswerActivity(oneQuestionNAnswerActivity string) {
+	db.updateOneQuestionNAnswerActivity = oneQuestionNAnswerActivity
+}
+
+func (db *databaseConnections) GetInsertAnswerNToOneActivity() string {
+	return db.insertAnswerNToOneActivity
+}
+func (db *databaseConnections) GetSelectAnswerNToOneActivity() string {
+	return db.selectAnswerNToOneActivity
+}
+func (db *databaseConnections) GetDeleteAnswerNToOneActivity() string {
+	return db.deleteAnswerNToOneActivity
+}
+func (db *databaseConnections) GetUpdateAnswerNToOneActivity() string {
+	return db.updateAnswerNToOneActivity
+}
+
+func (db *databaseConnections) SetInsertAnswerNToOneActivity(insertAnswerNToOneActivity string) {
+	db.insertAnswerNToOneActivity = insertAnswerNToOneActivity
+}
+func (db *databaseConnections) SetSelectAnswerNToOneActivity(selectAnswerNToOneActivity string) {
+	db.selectAnswerNToOneActivity = selectAnswerNToOneActivity
+}
+func (db *databaseConnections) SetDeleteAnswerNToOneActivity(deleteAnswerNToOneActivity string) {
+	db.deleteAnswerNToOneActivity = deleteAnswerNToOneActivity
+}
+func (db *databaseConnections) SetUpdateAnswerNToOneActivity(updateAnswerNToOneActivity string) {
+	db.updateAnswerNToOneActivity = updateAnswerNToOneActivity
+}
 func (u *databaseConnections) SetRootConnString(connString string) {
 	u.SetSelectClass(connString)
 	u.SetInsertClass(connString)
@@ -300,67 +491,23 @@ func (u *databaseConnections) SetRootConnString(connString string) {
 	u.SetDeleteArea(connString)
 	u.SetUpdateArea(connString)
 
-}
+	u.SetInsertImgAct(connString)
+	u.SetSelectImgAct(connString)
+	u.SetDeleteImgAct(connString)
+	u.SetUpdateImgAct(connString)
 
-func (db *databaseConnections) SetInsertArea(area string) {
-	db.insertArea = area
-}
+	u.SetInsertTxtAct(connString)
+	u.SetSelectTxtAct(connString)
+	u.SetDeleteTxtAct(connString)
+	u.SetUpdateTxtAct(connString)
 
-func (db *databaseConnections) SetSelectArea(area string) {
-	db.selectArea = area
-}
+	u.SetInsertOneQuestionNAnswerActivity(connString)
+	u.SetSelectOneQuestionNAnswerActivity(connString)
+	u.SetDeleteOneQuestionNAnswerActivity(connString)
+	u.SetUpdateOneQuestionNAnswerActivity(connString)
 
-func (db *databaseConnections) SetDeleteArea(area string) {
-	db.deleteArea = area
-}
-
-func (db *databaseConnections) SetUpdateArea(area string) {
-	db.updateArea = area
-}
-func (u *databaseConnections) SetSelectClass(connString string) {
-	u.selectClass = connString
-}
-
-func (u *databaseConnections) SetInsertClass(connString string) {
-	u.insertClass = connString
-}
-
-func (u *databaseConnections) SetDeleteClass(connString string) {
-	u.deleteClass = connString
-}
-
-func (u *databaseConnections) SetUpdateClass(connString string) {
-	u.updateClass = connString
-}
-
-func (u *databaseConnections) SetSelectUser(connString string) {
-	u.selectUser = connString
-}
-
-func (u *databaseConnections) SetInsertUser(connString string) {
-	u.insertUser = connString
-}
-
-func (u *databaseConnections) SetDeleteUser(connString string) {
-	u.deleteUser = connString
-}
-
-func (u *databaseConnections) SetUpdateUser(connString string) {
-	u.updateUser = connString
-}
-
-func (u *databaseConnections) SetSelectContent(connString string) {
-	u.selectContent = connString
-}
-
-func (u *databaseConnections) SetInsertContent(connString string) {
-	u.insertContent = connString
-}
-
-func (u *databaseConnections) SetDeleteContent(connString string) {
-	u.deleteContent = connString
-}
-
-func (u *databaseConnections) SetUpdateContent(connString string) {
-	u.updateContent = connString
+	u.SetInsertAnswerNToOneActivity(connString)
+	u.SetSelectAnswerNToOneActivity(connString)
+	u.SetDeleteAnswerNToOneActivity(connString)
+	u.SetUpdateAnswerNToOneActivity(connString)
 }
