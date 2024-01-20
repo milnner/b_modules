@@ -52,7 +52,7 @@ func (u *ImageActivityMySQLRepository) GetImageActivityById(imageActivity *model
 		rows       *sql.Rows
 		lastUpdate string
 	)
-	query := "SELECT `id`, `area_id`, `title`, `_blob`, `last_update`, `activated` FROM `image_activities` WHERE id=?"
+	query := "SELECT  `area_id`, `title`, `_blob`, `last_update`, `activated` FROM `image_activities` WHERE id=?"
 	rows, err = u.db.Query(query, imageActivity.Id)
 
 	if err != nil {
@@ -60,7 +60,7 @@ func (u *ImageActivityMySQLRepository) GetImageActivityById(imageActivity *model
 	}
 
 	if rows.Next() {
-		if err = rows.Scan(&imageActivity.Id, &imageActivity.AreaId, &imageActivity.Title, &imageActivity.Blob, &lastUpdate, &imageActivity.Activated); err != nil {
+		if err = rows.Scan(&imageActivity.AreaId, &imageActivity.Title, &imageActivity.Blob, &lastUpdate, &imageActivity.Activated); err != nil {
 			return err
 		}
 		if imageActivity.LastUpdate, err = time.Parse(time.DateTime, lastUpdate); err != nil {
@@ -103,4 +103,23 @@ func (u *ImageActivityMySQLRepository) GetImageActivitiesByAreaId(area *models.A
 		imageActivities = append(imageActivities, imageActivity)
 	}
 	return imageActivities, nil
+}
+func (u *ImageActivityMySQLRepository) GetImageActivityIdsByAreaId(area *models.Area) (imgIds []int, err error) {
+	var (
+		rows *sql.Rows
+		id   int
+	)
+	query := "SELECT `id` FROM `image_activities` WHERE `area_id`=?"
+
+	if rows, err = u.db.Query(query, area.Id); err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		if err = rows.Scan(&id); err != nil {
+			return nil, err
+		}
+		imgIds = append(imgIds, id)
+	}
+	return imgIds, err
 }

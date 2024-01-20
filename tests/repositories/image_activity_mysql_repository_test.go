@@ -564,3 +564,91 @@ func TestGetImageActivitiesByAreaId(t *testing.T) {
 		}
 	}
 }
+
+func TestGetImageActivityIdsByAreaId(t *testing.T) {
+	var (
+		dbConn *sql.DB
+		err    error
+	)
+	dC := environment.Environment().GetDatabaseConnections()
+
+	defer func() {
+		if err = database.InitDBConnection(&dbConn, dC.GetDeleteImgAct(), "mysql"); err != nil {
+			t.Fatal(err)
+		}
+
+		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
+			t.Fatal(err)
+		}
+		err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql")
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err := dbConn.Exec("DELETE FROM `area` WHERE 1")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql")
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = dbConn.Exec("DELETE FROM `users` WHERE 1")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+	}()
+
+	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < len(Users); i++ {
+		_, err = dbConn.Exec(Users[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < len(Area); i++ {
+		_, err = dbConn.Exec(Area[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = database.InitDBConnection(&dbConn, dC.GetInserImgAct(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < len(ImageActivity); i++ {
+		_, err = dbConn.Exec(ImageActivity[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	var imageRepository repositoryInterface.IImageActivityRepository
+	if err = database.InitDBConnection(&dbConn, dC.GetUpdateImgAct(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+
+	if imageRepository, err = repositories.NewImageActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
+
+	testCases := ImageActivityObjs
+
+	var imgActsIds []int
+
+	areaTests := AreasObjs[0]
+	if imgActsIds, err = imageRepository.GetImageActivityIdsByAreaId(&areaTests); err != nil {
+		t.Errorf("[ImageActivity][GetImageActivitiesByAreaId][%v]\n", err.Error())
+	}
+
+	if len(testCases) != len(imgActsIds) {
+		t.Errorf("[ImageActivity][GetImageActivitiesByAreaId][len][%v]!=[%v]\n", len(testCases), len(imgActsIds))
+	}
+}

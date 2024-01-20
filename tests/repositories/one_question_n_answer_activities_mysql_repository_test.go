@@ -73,8 +73,10 @@ func TestInsertOneQuestionNAnswerActivity(t *testing.T) {
 	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-
-	repo := repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn)
+	var repo *repositories.OneQuestionNAnswerActivityMySQLRepository
+	if repo, err = repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
 
 	for _, tc := range testcases {
 		if err = repo.Insert(&tc); err != nil {
@@ -152,7 +154,10 @@ func TestGetOneQuestionNAnswerActivityById(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	repo := repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn)
+	var repo *repositories.OneQuestionNAnswerActivityMySQLRepository
+	if repo, err = repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
 
 	var oneQuesNAnsw models.OneQuestionNAnswerActivity
 	for _, tc := range testcases {
@@ -242,7 +247,10 @@ func TestGetOneQuestionNAnswerActivitiesByIds(t *testing.T) {
 		oneQuestionNAnswerActivities[i] = models.OneQuestionNAnswerActivity{Id: t.Id}
 	}
 
-	repo := repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn)
+	var repo *repositories.OneQuestionNAnswerActivityMySQLRepository
+	if repo, err = repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
 	if err = repo.GetOneQuestionNAnswerActivitiesByIds(oneQuestionNAnswerActivities); err != nil {
 		t.Errorf("[OneQuestionNAnswerActivity][select] %v", err)
 	}
@@ -327,7 +335,10 @@ func TestGetOneQuestionNAnswerActivitiesByAreaId(t *testing.T) {
 
 	testcases := OneQuestionNAnswerActivityObjs
 	area := AreasObjs[0]
-	repo := repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn)
+	var repo *repositories.OneQuestionNAnswerActivityMySQLRepository
+	if repo, err = repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
 
 	if oneQuestionNAnswerActivities, err = repo.GetOneQuestionNAnswerActivitiesByAreaId(&area); err != nil {
 		t.Errorf("[OneQuestionNAnswerActivity][select] %v", err)
@@ -411,7 +422,10 @@ func TestUpdateOneQuestionNAnswerActivity(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	repo := repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn)
+	var repo *repositories.OneQuestionNAnswerActivityMySQLRepository
+	if repo, err = repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
 
 	var oneQuesNAnsw models.OneQuestionNAnswerActivity
 	for _, tc := range testcases {
@@ -493,12 +507,98 @@ func TestDeleteOneQuestionNAnswerActivity(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	repo := repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn)
+	var repo *repositories.OneQuestionNAnswerActivityMySQLRepository
+	if repo, err = repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
 
 	for _, tc := range testcases {
 
 		if err = repo.Delete(&tc); err != nil {
 			t.Errorf("[DeleteOneQuestionNAnswerActivity] %v", err)
 		}
+	}
+}
+
+func TestGetOneQuestionNAnswerActivityIdsByAreaId(t *testing.T) {
+	var (
+		dbConn                          *sql.DB
+		err                             error
+		oneQuestionNAnswerActivitiesIds []int
+	)
+	dC := environment.Environment().GetDatabaseConnections()
+
+	defer func() {
+		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+			t.Fatal(err)
+		}
+
+		if _, err = dbConn.Exec("DELETE FROM `one_question_n_answer_activities` WHERE 1"); err != nil {
+			t.Fatal(err)
+		}
+		err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql")
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err := dbConn.Exec("DELETE FROM `area` WHERE 1")
+		if err != nil {
+			t.Fatal(err)
+		}
+
+		err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql")
+		if err != nil {
+			t.Fatal(err)
+		}
+		_, err = dbConn.Exec("DELETE FROM `users` WHERE 1")
+		if err != nil {
+			t.Fatal(err)
+		}
+	}()
+
+	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < len(Users); i++ {
+		_, err = dbConn.Exec(Users[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < len(Area); i++ {
+		_, err = dbConn.Exec(Area[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+
+	for i := 0; i < len(OneQuestionNAnswerActivity); i++ {
+		_, err = dbConn.Exec(OneQuestionNAnswerActivity[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = database.InitDBConnection(&dbConn, dC.GetSelectOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+
+	area := AreasObjs[0]
+	var repo *repositories.OneQuestionNAnswerActivityMySQLRepository
+	if repo, err = repositories.NewOneQuestionNAnswerActivityMySQLRepository(dbConn); err != nil {
+		t.Fatal(err)
+	}
+
+	if oneQuestionNAnswerActivitiesIds, err = repo.GetOneQuestionNAnswerActivityIdsByAreaId(&area); err != nil {
+		t.Errorf("[GetOneQuestionNAnswerActivityIdsByAreaId] %v", err)
+	}
+	if len(oneQuestionNAnswerActivitiesIds) != len(OneQuestionNAnswerActivityObjs) {
+		t.Errorf("[GetOneQuestionNAnswerActivityIdsByAreaId][len] %v !=\n%v", len(oneQuestionNAnswerActivitiesIds), len(OneQuestionNAnswerActivityObjs))
 	}
 }

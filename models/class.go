@@ -8,10 +8,11 @@ type Class struct {
 	Description   string
 	CreationDate  time.Time
 	UserCreatorId int
-	EditorUsers   []int
-	StudentUsers  []int
+	AreaId        int
+	LastUpdate    time.Time
+	Activated     uint8
 }
 
-func NewClass(id int, title string, description string, creationDate time.Time, userCreatorId int, editorUsers []int, studentUsers []int) *Class {
-	return &Class{Id: id, Title: title, Description: description, CreationDate: creationDate, UserCreatorId: userCreatorId, EditorUsers: editorUsers, StudentUsers: studentUsers}
+func NewClass(id int, title string, description string, creationDate time.Time, userCreatorId int, areaId int, lastUpdate time.Time, activated uint8) *Class {
+	return &Class{Id: id, Title: title, Description: description, CreationDate: creationDate, UserCreatorId: userCreatorId, AreaId: areaId, LastUpdate: lastUpdate, Activated: activated}
 }

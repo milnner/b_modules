@@ -5,6 +5,7 @@ import (
 	"encoding/hex"
 	"time"
 
+	errapp "github.com/milnner/b_modules/errors"
 	"github.com/milnner/b_modules/models"
 )
 
@@ -12,8 +13,11 @@ type TextActivityMySQLRepository struct {
 	db *sql.DB
 }
 
-func NewTextActivityMySQLRepository(db *sql.DB) *TextActivityMySQLRepository {
-	return &TextActivityMySQLRepository{db: db}
+func NewTextActivityMySQLRepository(db *sql.DB) (*TextActivityMySQLRepository, error) {
+	if db == nil {
+		return nil, errapp.NewDatabaseConnectionError()
+	}
+	return &TextActivityMySQLRepository{db: db}, nil
 }
 
 func (u *TextActivityMySQLRepository) Insert(textActivity *models.TextActivity) (err error) {
@@ -96,4 +100,24 @@ func (u *TextActivityMySQLRepository) GetTextActivitiesByAreaId(area *models.Are
 		textActivities = append(textActivities, textActivity)
 	}
 	return textActivities, nil
+}
+func (u *TextActivityMySQLRepository) GetTextActivityIdsByAreaId(area *models.Area) (txtIds []int, err error) {
+	var (
+		textActivityRow *sql.Rows
+		id              int
+	)
+	query := "SELECT `id` FROM `text_activities` WHERE `area_id`=?"
+
+	if textActivityRow, err = u.db.Query(query, area.Id); err != nil {
+		return nil, err
+	}
+
+	for textActivityRow.Next() {
+		if err = textActivityRow.Scan(&id); err != nil {
+			return nil, err
+		}
+
+		txtIds = append(txtIds, id)
+	}
+	return txtIds, err
 }

@@ -8,129 +8,121 @@ import (
 	models "github.com/milnner/b_modules/models"
 )
 
-type userMySQLRepository struct {
+type UserMySQLRepository struct {
 	db *sql.DB
 }
 
-func NewUserMySQLRepository(db *sql.DB) (*userMySQLRepository, error) {
+func NewUserMySQLRepository(db *sql.DB) (*UserMySQLRepository, error) {
 	if db == nil {
 		return nil, errapp.NewDatabaseConnectionError()
 	}
-	return &userMySQLRepository{db: db}, nil
+	return &UserMySQLRepository{db: db}, nil
 }
 
-func (u *userMySQLRepository) GetUserById(id int) (*models.User, error) {
-	query := "SELECT id, name, surname, email, entry_date, bourn_date, sex, hash FROM users WHERE id= ?"
-	row, err := u.db.Query(query, id)
+func (u *UserMySQLRepository) GetUserById(user *models.User) (err error) {
+	var (
+		row *sql.Rows
+	)
 
-	if err != nil {
-		return &models.User{}, err
+	query := "SELECT `id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`, `activated` FROM users WHERE `id`=?"
+
+	if row, err = u.db.Query(query, user.Id); err != nil {
+		return err
 	}
 
-	user := &models.User{}
-
-	var entry_date, bourn_date string
+	var (
+		entryDate string
+		bournDate string
+	)
 	if row.Next() {
-		if err = row.Scan(&user.Id, &user.Name, &user.Surname, &user.Email, &entry_date, &bourn_date, &user.Sex, &user.Hash); err != nil {
-			return &models.User{}, err
+		if err = row.Scan(&user.Id,
+			&user.Name,
+			&user.Surname,
+			&user.Email,
+			&entryDate,
+			&bournDate,
+			&user.Sex,
+			&user.Hash,
+			&user.Activated); err != nil {
+			return err
 		}
-	}
-	dateLayout := "2006-01-02 15:04:05"
+		if user.EntryDate, err = time.Parse(time.DateTime, entryDate); err != nil {
+			return err
+		}
 
-	user.EntryDate, err = time.Parse(dateLayout, entry_date)
+		if user.BournDate, err = time.Parse(time.DateTime, bournDate); err != nil {
+			return err
+		}
 
-	if err != nil {
-		return &models.User{}, err
 	}
-	user.BournDate, err = time.Parse(dateLayout, bourn_date)
-	if err != nil {
-		return &models.User{}, err
-	}
-	return user, nil
+
+	return err
 }
 
-func (u *userMySQLRepository) GetUserByEmail(email string) (*models.User, error) {
-	query := "SELECT id, name, surname, email, entry_date, bourn_date, sex, hash FROM users WHERE email= ?"
-	row, err := u.db.Query(query, email)
+func (u *UserMySQLRepository) GetUserByEmail(user *models.User) (err error) {
+	var (
+		row *sql.Rows
+	)
 
-	if err != nil {
-		return &models.User{}, err
+	query := "SELECT `id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`, `activated` FROM users WHERE  `email`= ?"
+
+	if row, err = u.db.Query(query, user.Email); err != nil {
+		return err
 	}
-	user := &models.User{}
 
-	var entry_date, bourn_date string
+	var (
+		entryDate string
+		bournDate string
+	)
 	if row.Next() {
-
-		if err = row.Scan(&user.Id, &user.Name, &user.Surname, &user.Email, &entry_date, &bourn_date, &user.Sex, &user.Hash); err != nil {
-			return &models.User{}, err
+		if err = row.Scan(&user.Id,
+			&user.Name,
+			&user.Surname,
+			&user.Email,
+			&entryDate,
+			&bournDate,
+			&user.Sex,
+			&user.Hash,
+			&user.Activated); err != nil {
+			return err
 		}
-	}
-	dateLayout := "2006-01-02 15:04:05"
+		if user.EntryDate, err = time.Parse(time.DateTime, entryDate); err != nil {
+			return err
+		}
 
-	user.BournDate, err = time.Parse(dateLayout, bourn_date)
+		if user.BournDate, err = time.Parse(time.DateTime, bournDate); err != nil {
+			return err
+		}
 
-	if err != nil {
-		return &models.User{}, err
-	}
-
-	user.EntryDate, err = time.Parse(dateLayout, entry_date)
-
-	if err != nil {
-		return &models.User{}, err
 	}
 
-	return user, nil
+	return err
 }
 
-func (u *userMySQLRepository) GetAll() (*[]models.User, error) {
-	query := "SELECT id, name, surname, email, entry_date, bourn_date, sex, hash FROM users"
-	rows, err := u.db.Query(query)
-
-	if err != nil {
-		return nil, err
-	}
-	user := models.User{}
-	users := []models.User{}
-
-	var entry_date, bourn_date string
-	if rows.Next() {
-
-		if err = rows.Scan(&user.Id, &user.Name, &user.Surname, &user.Email, &entry_date, &bourn_date, &user.Sex, &user.Hash); err != nil {
-			return nil, err
-		}
-
-		dateLayout := "2006-01-02 15:04:05"
-
-		user.BournDate, err = time.Parse(dateLayout, bourn_date)
-
-		if err != nil {
-			return nil, err
-		}
-
-		user.EntryDate, err = time.Parse(dateLayout, entry_date)
-
-		if err != nil {
-			return nil, err
-		}
-
-		users = append(users, user)
-	}
-
-	return &users, nil
+func (u *UserMySQLRepository) Update(user *models.User) (err error) {
+	statement := "UPDATE `users` SET `name`=?,`surname`=?,`email`=?,`entry_date`=?,`bourn_date`=?,`sex`=?,`hash`=?,`activated`=? WHERE `id`=?"
+	_, err = u.db.Exec(statement, user.Name, user.Surname, user.Email, user.EntryDate.String()[:19], user.BournDate.String()[:10], user.Sex, user.Hash, user.Activated, user.Id)
+	return err
 }
 
-func (u *userMySQLRepository) Insert(user *models.User) error {
+func (u *UserMySQLRepository) Insert(user *models.User) error {
 	statement := "INSERT INTO `users` ( `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES ( ?, ?, ?, ?, ?, ?, ?)"
-
 	_, err := u.db.Exec(statement, user.Name, user.Surname, user.Email, user.EntryDate.String()[:19], user.BournDate.String()[:10], user.Sex, user.Hash)
 	return err
 }
 
-func (u *userMySQLRepository) Delete(user *models.User) error {
-	statement := " DELETE FROM `users` WHERE id= ?"
+func (u *UserMySQLRepository) Delete(user *models.User) error {
+	statement := "UPDATE `users` SET `activated`=0 WHERE id= ?"
 	_, err := u.db.Exec(statement, user.Id)
-	if err != nil {
-		return err
+
+	return err
+}
+
+func (u *UserMySQLRepository) GetUsersByIds(users []models.User) (err error) {
+	for i := 0; i < len(users); i++ {
+		if err = u.GetUserById(&users[i]); err != nil {
+			return err
+		}
 	}
-	return nil
+	return err
 }

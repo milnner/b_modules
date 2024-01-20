@@ -11,4 +11,5 @@ type ITextActivityRepository interface {
 	GetTextActivityById(*models.TextActivity) error
 	GetTextActivitiesByIds([]models.TextActivity) error
 	GetTextActivitiesByAreaId(*models.Area) ([]models.TextActivity, error)
+	GetTextActivityIdsByAreaId(*models.Area) ([]int, error)
 }

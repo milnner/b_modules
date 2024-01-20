@@ -68,33 +68,25 @@ func (u *ContentMySQLRepository) GetContentById(content *models.Content) (err er
 	return nil
 }
 
-func (u *ContentMySQLRepository) GetContentsByAreaId(area *models.Area) (contents []models.Content, err error) {
+func (u *ContentMySQLRepository) GetContentIdsByAreaId(area *models.Area) (contentsIds []int, err error) {
 	var (
-		rows    *sql.Rows
-		content models.Content
+		rows *sql.Rows
+		id   int
 	)
-	query := "SELECT `id`, `title`, `description`, `creation_datetime`, `last_update`, `area_id`, `activated` FROM `contents` WHERE `area_id`=?"
+	query := "SELECT `id` FROM `contents` WHERE `area_id`=?"
 
 	if rows, err = u.db.Query(query, area.Id); err != nil {
 		return nil, err
 	}
-	var (
-		creationDatetime string
-		lastUpdate       string
-	)
+
 	for rows.Next() {
-		if err = rows.Scan(&content.Id, &content.Title, &content.Description, &creationDatetime, &lastUpdate, &content.AreaId, &content.Activated); err != nil {
+		if err = rows.Scan(&id); err != nil {
 			return nil, err
 		}
-		if content.CreationDate, err = time.Parse(time.DateTime, creationDatetime); err != nil {
-			return nil, err
-		}
-		if content.LastUpdate, err = time.Parse(time.DateTime, lastUpdate); err != nil {
-			return nil, err
-		}
-		contents = append(contents, content)
+		contentsIds = append(contentsIds, id)
 	}
-	return contents, nil
+
+	return contentsIds, err
 }
 
 func (u *ContentMySQLRepository) GetContentsByIds(contents []models.Content) (err error) {

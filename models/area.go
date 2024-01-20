@@ -21,8 +21,8 @@ func (u Areas) Sort(fieldName string) {
 	sortAreaByField(u, fieldName)
 }
 
-func NewArea(id int, title string, description string, ownerId int, creationDatetime time.Time) *Area {
-	return &Area{Id: id, Title: title, Description: description, OwnerId: ownerId, CreationDatetime: creationDatetime}
+func NewArea(id int, title string, description string, ownerId int, creationDatetime time.Time, activated uint8) *Area {
+	return &Area{Id: id, Title: title, Description: description, OwnerId: ownerId, CreationDatetime: creationDatetime, Activated: activated}
 }
 
 func sortAreaByField(slice []Area, fieldName string) {

@@ -9,4 +9,5 @@ type IImageActivityRepository interface {
 	GetImageActivityById(*models.ImageActivity) error
 	GetImageActivitiesByIds([]models.ImageActivity) error
 	GetImageActivitiesByAreaId(*models.Area) ([]models.ImageActivity, error)
+	GetImageActivityIdsByAreaId(*models.Area) ([]int, error)
 }

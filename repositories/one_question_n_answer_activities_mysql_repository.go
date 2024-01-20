@@ -4,6 +4,7 @@ import (
 	"database/sql"
 	"time"
 
+	errapp "github.com/milnner/b_modules/errors"
 	"github.com/milnner/b_modules/models"
 )
 
@@ -11,8 +12,11 @@ type OneQuestionNAnswerActivityMySQLRepository struct {
 	db *sql.DB
 }
 
-func NewOneQuestionNAnswerActivityMySQLRepository(db *sql.DB) *OneQuestionNAnswerActivityMySQLRepository {
-	return &OneQuestionNAnswerActivityMySQLRepository{db: db}
+func NewOneQuestionNAnswerActivityMySQLRepository(db *sql.DB) (*OneQuestionNAnswerActivityMySQLRepository, error) {
+	if db == nil {
+		return nil, errapp.NewDatabaseConnectionError()
+	}
+	return &OneQuestionNAnswerActivityMySQLRepository{db: db}, nil
 }
 
 func (u *OneQuestionNAnswerActivityMySQLRepository) Insert(oneQuestionNAnswerActivity *models.OneQuestionNAnswerActivity) (err error) {
@@ -89,4 +93,25 @@ func (u *OneQuestionNAnswerActivityMySQLRepository) Update(oneQuestionNAnswerAct
 		return err
 	}
 	return nil
+}
+
+func (u *OneQuestionNAnswerActivityMySQLRepository) GetOneQuestionNAnswerActivityIdsByAreaId(area *models.Area) (oneQstNAswIds []int, err error) {
+	var (
+		rows *sql.Rows
+		id   int
+	)
+	query := "SELECT `id` FROM `one_question_n_answer_activities` WHERE `area_id`=? "
+
+	if rows, err = u.db.Query(query, area.Id); err != nil {
+		return nil, err
+	}
+
+	for rows.Next() {
+		if err = rows.Scan(&id); err != nil {
+			return nil, err
+		}
+
+		oneQstNAswIds = append(oneQstNAswIds, id)
+	}
+	return oneQstNAswIds, err
 }

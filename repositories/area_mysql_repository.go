@@ -5,7 +5,7 @@ import (
 	"time"
 
 	"github.com/milnner/b_modules/errors"
-	models "github.com/milnner/b_modules/models"
+	"github.com/milnner/b_modules/models"
 )
 
 type AreaMySQLRepository struct {
@@ -19,151 +19,93 @@ func NewAreaMySQLRepository(db *sql.DB) (*AreaMySQLRepository, error) {
 	return &AreaMySQLRepository{db: db}, nil
 }
 
-// Implementação da interface IAreaRepository
-func (r *AreaMySQLRepository) GetAll() ([]models.Area, error) {
-	query := "SELECT `id`, `title`, `description`, `owner_id`, `creation_datetime` FROM `area`"
-	areas, err := r.db.Query(query)
-	if err != nil {
-		return nil, err
-	}
+func (u *AreaMySQLRepository) GetAreaById(area *models.Area) (err error) {
 	var (
-		area             models.Area
+		row              *sql.Rows
 		creationDatetime string
-		areasSlice       []models.Area
 	)
+	statement := "SELECT `title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` WHERE `id`=?"
 
-	for areas.Next() {
-		if err := areas.Scan(&area.Id, &area.Title, &area.Description, &area.OwnerId, &creationDatetime); err != nil {
-			return nil, err
-		}
-		area.CreationDatetime, err = time.Parse(time.DateTime, creationDatetime)
-		if err != nil {
-			return nil, err
-		}
-		areasSlice = append(areasSlice, area)
-	}
-	return areasSlice, nil
-}
-
-func (r *AreaMySQLRepository) GetAreaById(area *models.Area) (err error) {
-	query := "SELECT `id`, `title`, `description`, `owner_id`, `creation_datetime` FROM `area` WHERE `id`=?"
-	var areas *sql.Rows
-	areas, err = r.db.Query(query, area.Id)
-	if err != nil {
+	if row, err = u.db.Query(statement, area.Id); err != nil {
 		return err
 	}
-	var (
-		creationDatetime string
-	)
 
-	if areas.Next() {
-		if err := areas.Scan(&area.Id, &area.Title, &area.Description, &area.OwnerId, &creationDatetime); err != nil {
+	if row.Next() {
+		if err := row.Scan(&area.Title, &area.Description, &area.OwnerId, &creationDatetime, &area.Activated); err != nil {
 			return err
 		}
-		area.CreationDatetime, err = time.Parse(time.DateTime, creationDatetime)
-		if err != nil {
+		if area.CreationDatetime, err = time.Parse(time.DateTime, creationDatetime); err != nil {
 			return err
 		}
 	}
-	return nil
+	return err
 }
 
-func (r *AreaMySQLRepository) GetAreasByUserId(user *models.User) ([]models.Area, error) {
-	query := "SELECT `id`, `title`, `description`, `owner_id`, `creation_datetime` FROM `area` WHERE `owner_id`=?"
-	areas, err := r.db.Query(query, user.Id)
-	if err != nil {
-		return nil, err
-	}
+func (u *AreaMySQLRepository) GetUserIdsByAreaId(area *models.Area) (areaIds []int, err error) {
 	var (
-		area             models.Area
-		creationDatetime string
-		areasArr         []models.Area
+		row *sql.Rows
+		id  int
 	)
+	statement := "SELECT `user_id` FROM `user_has_area_access` WHERE `area_id`=?"
 
-	for areas.Next() {
-		if err := areas.Scan(&area.Id, &area.Title, &area.Description, &area.OwnerId, &creationDatetime); err != nil {
-			return nil, err
-		}
-		area.CreationDatetime, err = time.Parse(time.DateTime, creationDatetime)
-		if err != nil {
-			return nil, err
-		}
-		areasArr = append(areasArr, area)
-	}
-	return areasArr, nil
-}
-
-func (r *AreaMySQLRepository) GetAreaClassIdsById(class *models.Class) (ids []int, err error) {
-	query := "SELECT `id` FROM `classes` WHERE `area_id`=?"
-	rows, err := r.db.Query(query, class.Id)
-	if err != nil {
+	if row, err = u.db.Query(statement, area.Id); err != nil {
 		return nil, err
 	}
-	var idS int
-	for rows.Next() {
-		if err := rows.Scan(&idS); err != nil {
+
+	for row.Next() {
+		if err := row.Scan(&id); err != nil {
 			return nil, err
 		}
-		ids = append(ids, idS)
+		areaIds = append(areaIds, id)
 	}
-	return ids, nil
+	return areaIds, err
 }
 
-func (r *AreaMySQLRepository) GetAreaContentIdsById(content *models.Content) (ids []int, err error) {
-	query := "SELECT `id` FROM `content` WHERE `area_id`=?"
-	rows, err := r.db.Query(query, content.Id)
-	if err != nil {
-		return nil, err
+func (u *AreaMySQLRepository) InsertUser(area *models.Area, user *models.User) (err error) {
+	statement := "INSERT INTO `user_has_area_access`(`permission`, `area_id`, `user_id`) VALUES (?,?,?)"
+	_, err = u.db.Exec(statement, user.Permision, area.Id, user.Id)
+	return err
+}
+
+func (u *AreaMySQLRepository) RemoveUser(area *models.Area, user *models.User) (err error) {
+	statement := "UPDATE `user_has_area_access` SET `activated`=0 WHERE ( `area_id`, `user_id`)=(?,?)"
+	_, err = u.db.Exec(statement, area.Id, user.Id)
+	return err
+}
+
+func (u *AreaMySQLRepository) Insert(area *models.Area) (err error) {
+	statement := "INSERT INTO `area`(`title`, `description`, `owner_id`) VALUES (?,?,?)"
+	_, err = u.db.Exec(statement, area.Title, area.Description, area.OwnerId)
+	return err
+}
+func (u *AreaMySQLRepository) Update(area *models.Area) (err error) {
+	statement := "UPDATE `area` SET `title`=?,`description`=?, `owner_id`=? WHERE `id`=?"
+	_, err = u.db.Exec(statement, area.Title, area.Description, area.OwnerId, area.Id)
+	return err
+}
+func (u *AreaMySQLRepository) Delete(area *models.Area) (err error) {
+	statement := "UPDATE `area` SET `activated`=0 WHERE `id`=?"
+	_, err = u.db.Exec(statement, area.Id)
+	return err
+}
+
+func (u *AreaMySQLRepository) GetPermission(area *models.Area, user *models.User) (err error) {
+	var row *sql.Rows
+	statement := "SELECT `permission` FROM `user_has_area_access` WHERE (`area_id`, `user_id`)=(?,?) and `activated`=1 "
+	if row, err = u.db.Query(statement, area.Id, user.Id); err != nil {
+		return err
 	}
-	var idS int
-	for rows.Next() {
-		if err := rows.Scan(&idS); err != nil {
-			return nil, err
+	if row.Next() {
+		err = row.Scan(&user.Permision)
+	}
+	return err
+}
+
+func (u *AreaMySQLRepository) GetAreasByIds(areas []models.Area) (err error) {
+	for i := 0; i < len(areas); i++ {
+		if err = u.GetAreaById(&areas[i]); err != nil {
+			return err
 		}
-		ids = append(ids, idS)
 	}
-	return ids, nil
-}
-
-func (r *AreaMySQLRepository) Insert(area *models.Area) error {
-	query := "INSERT INTO `area`(`title`, `description`, `owner_id`, `creation_datetime`) VALUES (?,?,?,?)"
-	_, err := r.db.Query(query, area.Title, area.Description, area.OwnerId, area.CreationDatetime)
-	if err != nil {
-		return err
-	}
-	area = nil
-	return nil
-}
-
-func (r *AreaMySQLRepository) Update(area *models.Area) error {
-	query := "UPDATE `area` SET `title`=?, `description`=?,`owner_id`=?,`creation_datetime`=? WHERE `id`=?"
-	_, err := r.db.Query(query, area.Title, area.Description, area.OwnerId, area.CreationDatetime, area.Id)
-	if err != nil {
-		return err
-	}
-	area = nil
-	return nil
-}
-
-func (r *AreaMySQLRepository) GetAreasByIds(ids []int) (areas []models.Area, err error) {
-	var area models.Area
-	for _, v := range ids {
-		area.Id = v
-		err = r.GetAreaById(&area)
-		if err != nil {
-			return areas, err
-		}
-		areas = append(areas, area)
-	}
-	return areas, nil
-}
-
-func (r *AreaMySQLRepository) Delete(area *models.Area) error {
-	query := "UPDATE SET `activated`=0 WHERE id= ?"
-	_, err := r.db.Query(query, area.Id)
-	if err != nil {
-		return err
-	}
-	area = nil
 	return nil
 }

@@ -4,6 +4,8 @@ import "github.com/milnner/b_modules/models"
 
 type IClassRepository interface {
 	GetClassById(*models.Class) error
+	GetClassesByIds([]models.Class) error
+	GetClassIdsByAreaId(*models.Area) ([]int, error)
 	Insert(*models.Class) error
 	AddStudentUser(*models.Class, *models.User) error
 	RemoveStudentUser(*models.Class, *models.User) error
@@ -12,6 +14,6 @@ type IClassRepository interface {
 	UpdateContentPosition(class *models.Class, content *models.Content) error
 	Update(class *models.Class) error
 	GetContentIdsById(*models.Class) ([]int, error)
-	GetStudentIdsByClassId(*models.Class) ([]int, error)
+	GetStudentIdsById(*models.Class) ([]int, error)
 	Delete(*models.Class) error
 }

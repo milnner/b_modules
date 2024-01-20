@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 
+	errapp "github.com/milnner/b_modules/errors"
 	"github.com/milnner/b_modules/models"
 )
 
@@ -10,8 +11,11 @@ type AnswerNToOneMySQLRepository struct {
 	db *sql.DB
 }
 
-func NewAnswerNToOneMySQLRepository(db *sql.DB) *AnswerNToOneMySQLRepository {
-	return &AnswerNToOneMySQLRepository{db: db}
+func NewAnswerNToOneMySQLRepository(db *sql.DB) (*AnswerNToOneMySQLRepository, error) {
+	if db == nil {
+		return nil, errapp.NewDatabaseConnectionError()
+	}
+	return &AnswerNToOneMySQLRepository{db: db}, nil
 }
 
 func (u *AnswerNToOneMySQLRepository) Insert(answerNToOne *models.AnswerNToOne) (err error) {
@@ -67,17 +71,37 @@ func (u *AnswerNToOneMySQLRepository) GetAnswersNToOneByOneQuestionNAnswerActivi
 		answerNToOne models.AnswerNToOne
 		rows         *sql.Rows
 	)
-	query := "SELECT `area_id`, `one_question_n_answer_activity_id`, `correctness`, `answer`, `activated` FROM `answer_n_to_one` WHERE `id`=?"
+	query := "SELECT `id`, `area_id`, `one_question_n_answer_activity_id`, `correctness`, `answer`, `activated` FROM `answer_n_to_one` WHERE `one_question_n_answer_activity_id`=?"
 
 	if rows, err = u.db.Query(query, oneQuestionNAnswerActivity.Id); err != nil {
 		return nil, err
 	}
 	for rows.Next() {
-		if err = rows.Scan(&answerNToOne.AreaId, &answerNToOne.OneQuestionNAnswerActivityId, &answerNToOne.Correctness, &answerNToOne.Answer, &answerNToOne.Activated); err != nil {
+		if err = rows.Scan(&answerNToOne.Id, &answerNToOne.AreaId, &answerNToOne.OneQuestionNAnswerActivityId, &answerNToOne.Correctness, &answerNToOne.Answer, &answerNToOne.Activated); err != nil {
 			return nil, err
 		}
 
 		answersNToOne = append(answersNToOne, answerNToOne)
 	}
 	return answersNToOne, nil
+}
+
+func (u *AnswerNToOneMySQLRepository) GetAnswersNToOneIdsByOneQuestionNAnswerActivityId(oneQuestionNAnswerActivity *models.OneQuestionNAnswerActivity) (answersIds []int, err error) {
+	var (
+		id   int
+		rows *sql.Rows
+	)
+	query := "SELECT `id` FROM `answer_n_to_one` WHERE `one_question_n_answer_activity_id`=?"
+
+	if rows, err = u.db.Query(query, oneQuestionNAnswerActivity.Id); err != nil {
+		return nil, err
+	}
+	for rows.Next() {
+		if err = rows.Scan(&id); err != nil {
+			return nil, err
+		}
+
+		answersIds = append(answersIds, id)
+	}
+	return answersIds, err
 }

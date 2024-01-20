@@ -529,28 +529,14 @@ func TestGetContentsByAreaId(t *testing.T) {
 	if repo, err = repositories.NewContentMySQLRepository(dbConn); err != nil {
 		t.Fatal(err)
 	}
-	testcases := ContentObjs
 
 	area := AreasObjs[0]
 
-	var contents []models.Content
-	if contents, err = repo.GetContentsByAreaId(&area); err != nil {
-		t.Errorf("[TestGetContentsByAreaId] %v", err)
+	var contents []int
+	if contents, err = repo.GetContentIdsByAreaId(&area); err != nil && len(ContentObjs) != len(contents) {
+		t.Errorf("[GetContentIdsByAreaId] %v", err)
 	}
 
-	for _, tc := range testcases {
-		for _, content := range contents {
-
-			if content.Id == tc.Id && (content.Activated != tc.Activated ||
-				content.AreaId != tc.AreaId ||
-				strings.Compare(content.CreationDate.String()[:19], tc.CreationDate.String()[:19]) != 0 ||
-				strings.Compare(content.Title, tc.Title) != 0 ||
-				strings.Compare(content.Description, tc.Description) != 0 ||
-				strings.Compare(content.LastUpdate.String()[:19], tc.LastUpdate.String()[:19]) != 0) {
-				t.Errorf("[TestGetContentsByAreaId] %v|=\n%v", tc, content)
-			}
-		}
-	}
 }
 
 func TestContentAddActivity_TestContentGetActivityIds_TestContentUpdateActivity_TestContentRemoveActivity(t *testing.T) {
