@@ -235,6 +235,10 @@ func (u *environment) IsDebug() bool {
 	return u.debug
 }
 
+func (u *environment) SetDebug(debug bool) {
+	u.debug = debug
+}
+
 func (u *environment) GetDatabaseConnections() *databaseConnections {
 	return &u.dbConnections
 }
