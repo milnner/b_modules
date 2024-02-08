@@ -5,8 +5,8 @@ type SignUpUserType struct {
 	Surname   string `json:"surname"`
 	Email     string `json:"email"`
 	Professor uint8  `json:"professor"`
-	EntryDate string `json:"entry-date"`
-	BournDate string `json:"bourn-date"`
+	EntryDate string `json:"entryDate"`
+	BournDate string `json:"bournDate"`
 	Sex       Sex    `json:"sex"`
 	Password  string `json:"password"`
 }
