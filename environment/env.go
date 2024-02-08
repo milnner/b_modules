@@ -228,6 +228,10 @@ func (u *environment) GetAddr() string {
 	return u.addr
 }
 
+func (u *environment) SetAddr(addr string) {
+	u.addr = addr
+}
+
 func (u *environment) GetJWTSecretKey() []byte {
 	return []byte(*(u.jwtSecretKey))
 }
