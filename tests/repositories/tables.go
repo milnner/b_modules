@@ -77,12 +77,12 @@ func init() {
 	}
 
 	UsersObjs = []models.User{
-		*models.NewUser(1, "name1", "surname1", "user1@1.com", timeObj, timeObj, "write", "male", "hash", 1),
-		*models.NewUser(2, "name2", "surname2", "user2@2.com", timeObj, timeObj, "write", "female", "hash", 1),
-		*models.NewUser(3, "name3", "surname3", "user3@3.com", timeObj, timeObj, "write", "other", "hash", 1),
-		*models.NewUser(4, "name4", "surname4", "user4@4.com", timeObj, timeObj, "write", "male", "hash", 1),
-		*models.NewUser(5, "name5", "surname5", "user5@5.com", timeObj, timeObj, "write", "female", "hash", 1),
-		*models.NewUser(6, "name6", "surname6", "user6@6.com", timeObj, timeObj, "write", "other", "hash", 1),
+		*models.NewUser(1, "name1", "surname1", "user1@1.com", 0, timeObj, timeObj, "write", "male", "hash", 1),
+		*models.NewUser(2, "name2", "surname2", "user2@2.com", 0, timeObj, timeObj, "write", "female", "hash", 1),
+		*models.NewUser(3, "name3", "surname3", "user3@3.com", 0, timeObj, timeObj, "write", "other", "hash", 1),
+		*models.NewUser(4, "name4", "surname4", "user4@4.com", 0, timeObj, timeObj, "write", "male", "hash", 1),
+		*models.NewUser(5, "name5", "surname5", "user5@5.com", 0, timeObj, timeObj, "write", "female", "hash", 1),
+		*models.NewUser(6, "name6", "surname6", "user6@6.com", 0, timeObj, timeObj, "write", "other", "hash", 1),
 	}
 
 	Classes = []string{

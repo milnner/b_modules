@@ -24,7 +24,7 @@ func (u *UserMySQLRepository) GetUserById(user *models.User) (err error) {
 		row *sql.Rows
 	)
 
-	query := "SELECT `id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`, `activated` FROM users WHERE `id`=?"
+	query := "SELECT `id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`, `activated` FROM `users` WHERE `id`=?"
 
 	if row, err = u.db.Query(query, user.Id); err != nil {
 		return err
@@ -39,6 +39,7 @@ func (u *UserMySQLRepository) GetUserById(user *models.User) (err error) {
 			&user.Name,
 			&user.Surname,
 			&user.Email,
+			&user.Professor,
 			&entryDate,
 			&bournDate,
 			&user.Sex,
@@ -64,7 +65,7 @@ func (u *UserMySQLRepository) GetUserByEmail(user *models.User) (err error) {
 		row *sql.Rows
 	)
 
-	query := "SELECT `id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`, `activated` FROM users WHERE  `email`= ?"
+	query := "SELECT `id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`, `activated` FROM `users` WHERE `email`= ?"
 
 	if row, err = u.db.Query(query, user.Email); err != nil {
 		return err
@@ -79,6 +80,7 @@ func (u *UserMySQLRepository) GetUserByEmail(user *models.User) (err error) {
 			&user.Name,
 			&user.Surname,
 			&user.Email,
+			&user.Professor,
 			&entryDate,
 			&bournDate,
 			&user.Sex,
@@ -100,14 +102,14 @@ func (u *UserMySQLRepository) GetUserByEmail(user *models.User) (err error) {
 }
 
 func (u *UserMySQLRepository) Update(user *models.User) (err error) {
-	statement := "UPDATE `users` SET `name`=?,`surname`=?,`email`=?,`entry_date`=?,`bourn_date`=?,`sex`=?,`hash`=?,`activated`=? WHERE `id`=?"
-	_, err = u.db.Exec(statement, user.Name, user.Surname, user.Email, user.EntryDate.String()[:19], user.BournDate.String()[:10], user.Sex, user.Hash, user.Activated, user.Id)
+	statement := "UPDATE `users` SET `name`=?,`surname`=?,`email`=?, `professor`=?, `entry_date`=?,`bourn_date`=?,`sex`=?,`hash`=?,`activated`=? WHERE `id`=?"
+	_, err = u.db.Exec(statement, user.Name, user.Surname, user.Email, user.Professor, user.EntryDate.String()[:19], user.BournDate.String()[:10], user.Sex, user.Hash, user.Activated, user.Id)
 	return err
 }
 
 func (u *UserMySQLRepository) Insert(user *models.User) error {
-	statement := "INSERT INTO `users` ( `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES ( ?, ?, ?, ?, ?, ?, ?)"
-	_, err := u.db.Exec(statement, user.Name, user.Surname, user.Email, user.EntryDate.String()[:19], user.BournDate.String()[:10], user.Sex, user.Hash)
+	statement := "INSERT INTO `users` ( `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES ( ?, ?, ?, ?, ?, ?, ?, ?)"
+	_, err := u.db.Exec(statement, user.Name, user.Surname, user.Email, user.Professor, user.EntryDate.String()[:19], user.BournDate.String()[:10], user.Sex, user.Hash)
 	return err
 }
 

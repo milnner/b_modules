@@ -15,6 +15,7 @@ type User struct {
 	Name      string
 	Surname   string
 	Email     string
+	Professor uint8
 	EntryDate time.Time
 	BournDate time.Time
 	Sex       apptypes.Sex
@@ -23,8 +24,8 @@ type User struct {
 	Activated uint8
 }
 
-func NewUser(id int, name string, surname string, email string, entryDate time.Time, bournDate time.Time, permision apptypes.UserClassPermission, sex string, hash string, activated uint8) *User {
-	return &User{Id: id, Name: name, Surname: surname, Email: email, EntryDate: entryDate, BournDate: bournDate, Sex: apptypes.Sex(sex), Hash: hash, Activated: activated, Permision: permision}
+func NewUser(id int, name string, surname string, email string, professor uint8, entryDate time.Time, bournDate time.Time, permision apptypes.UserClassPermission, sex string, hash string, activated uint8) *User {
+	return &User{Id: id, Name: name, Surname: surname, Email: email, Professor: professor, EntryDate: entryDate, BournDate: bournDate, Sex: apptypes.Sex(sex), Hash: hash, Activated: activated, Permision: permision}
 
 }
 
