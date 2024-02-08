@@ -1,6 +1,7 @@
 package environment
 
 import (
+	"fmt"
 	"os"
 	"reflect"
 
@@ -95,7 +96,7 @@ func NewDatabaseConnections() *databaseConnections {
 	return &databaseConnections{}
 }
 
-func InitEnvironment(eV environmentVariables, hF httpFiles, addr string, debug bool, dC databaseConnections) {
+func InitEnvironment(eV environmentVariables, hF httpFiles, addr string, debug bool, dC databaseConnections) error {
 
 	if env == nil {
 		CreateEnvironment()
@@ -103,7 +104,7 @@ func InitEnvironment(eV environmentVariables, hF httpFiles, addr string, debug b
 
 	env.addr = addr
 	if addr == "" {
-		panic("undefined addr")
+		return fmt.Errorf("undefined address")
 	}
 
 	env.debug = debug
@@ -115,23 +116,32 @@ func InitEnvironment(eV environmentVariables, hF httpFiles, addr string, debug b
 	}
 
 	env.InitDatabaseConnections(&dC)
+	return nil
 }
 
-func (u *environment) InitLogPath(logPathEnvVariable string) {
+func (u *environment) InitLogPath(logPathEnvVariable string) error {
 	if env == nil {
 		CreateEnvironment()
 	}
+
 	u.logPath = new(string)
 	*(u.logPath) = os.Getenv(logPathEnvVariable)
 
 	if *(u.logPath) == "" {
-		panic(errapp.NewNotExistEnvironmentVariableError(logPathEnvVariable))
-	} else if _, err := os.Stat(*(u.logPath)); os.IsNotExist(err) {
-		panic(err)
+		return errapp.NewNotExistEnvironmentVariableError(logPathEnvVariable)
 	}
+
+	fi, err := os.Stat(*(u.logPath))
+	if err != nil {
+		return err
+	}
+	if !fi.IsDir() {
+		return errapp.NewNotExistEnvironmentVariableError(logPathEnvVariable)
+	}
+	return nil
 }
 
-func (u *environment) InitJWTSecretKey(jwtSecretKeyEnvVariable string) {
+func (u *environment) InitJWTSecretKey(jwtSecretKeyEnvVariable string) error {
 	if env == nil {
 		CreateEnvironment()
 	}
@@ -139,27 +149,29 @@ func (u *environment) InitJWTSecretKey(jwtSecretKeyEnvVariable string) {
 	*(u.jwtSecretKey) = os.Getenv(jwtSecretKeyEnvVariable)
 
 	if *(u.jwtSecretKey) == "" {
-		panic(errapp.NewNotExistEnvironmentVariableError(jwtSecretKeyEnvVariable))
+		return errapp.NewNotExistEnvironmentVariableError(jwtSecretKeyEnvVariable)
 	}
+	return nil
 }
 
-func (u *environment) InitHTTPS(hF httpFiles) {
+func (u *environment) InitHTTPS(hF httpFiles) error {
 	if env == nil {
 		CreateEnvironment()
 	}
 	u.certFile = hF.certFile
 	if u.certFile == "" {
-		panic("Certificate file is required for HTTPS")
+		return fmt.Errorf("certificate file is required for HTTPS")
 	}
 
 	u.keyFile = hF.keyFile
 	if u.keyFile == "" {
-		panic("Key file is required for HTTPS")
+		return fmt.Errorf("key file is required for HTTPS")
 	}
+	return nil
 }
 func (u *environment) InitDatabaseConnections(
 	dC *databaseConnections,
-) {
+) error {
 	if env == nil {
 		CreateEnvironment()
 	}
@@ -177,8 +189,9 @@ func (u *environment) InitDatabaseConnections(
 		}
 	}
 	if len(result) > 0 {
-		panic(errapp.NewUnreachableDatabaseStringsError(result))
+		return errapp.NewUnreachableDatabaseStringsError(result)
 	}
+	return nil
 }
 
 func (u *databaseConnections) SetDBConnectionString() error {
