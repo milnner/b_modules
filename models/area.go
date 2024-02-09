@@ -7,12 +7,12 @@ import (
 )
 
 type Area struct {
-	Id               int
-	Title            string
-	Description      string
-	OwnerId          int
-	CreationDatetime time.Time
-	Activated        uint8
+	Id               int       `json:"id"`
+	Title            string    `json:"title"`
+	Description      string    `json:"description"`
+	OwnerId          int       `json:"ownerId"`
+	CreationDatetime time.Time `json:"creationDatetime"`
+	Activated        uint8     `json:"activated"`
 }
 
 type Areas []Area
