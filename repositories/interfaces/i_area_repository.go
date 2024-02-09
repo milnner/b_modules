@@ -5,6 +5,7 @@ import "github.com/milnner/b_modules/models"
 type IAreaRepository interface {
 	GetAreaById(*models.Area) error
 	GetUserIdsByAreaId(*models.Area) ([]int, error)
+	GetAreasIdsByOwnerId(*models.Area) ([]int, error)
 	GetPermission(*models.Area, *models.User) error
 	GetAreasByIds([]models.Area) error
 	InsertUser(*models.Area, *models.User) error
