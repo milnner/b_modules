@@ -109,3 +109,23 @@ func (u *AreaMySQLRepository) GetAreasByIds(areas []models.Area) (err error) {
 	}
 	return nil
 }
+
+func (u *AreaMySQLRepository) GetAreasIdsByOwnerId(area *models.Area) (areaIds []int, err error) {
+	var (
+		row *sql.Rows
+		id  int
+	)
+	statement := "SELECT `id` FROM `area` WHERE `owner_id`=?"
+
+	if row, err = u.db.Query(statement, area.OwnerId); err != nil {
+		return nil, err
+	}
+
+	for row.Next() {
+		if err := row.Scan(&id); err != nil {
+			return nil, err
+		}
+		areaIds = append(areaIds, id)
+	}
+	return areaIds, err
+}

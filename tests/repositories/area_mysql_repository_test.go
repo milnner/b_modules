@@ -34,6 +34,74 @@ func TestAreaMySQLRepositoryPolimorfism(t *testing.T) {
 	var _ repoInterfaces.IAreaRepository = &repositories.AreaMySQLRepository{}
 }
 
+func TestGetAreasIdsByOwnerId(t *testing.T) {
+	var dbConn *sql.DB
+	dC := environment.Environment().GetDatabaseConnections()
+
+	err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql")
+	if err != nil {
+		t.Fatal(err)
+	}
+
+	defer func() {
+
+		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+			t.Fatal(err)
+		}
+
+		if _, err = dbConn.Exec("DELETE FROM `area` WHERE 1"); err != nil {
+			t.Fatal(err)
+		}
+
+		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+			t.Fatal(err)
+		}
+
+		if _, err = dbConn.Exec("DELETE FROM `users` WHERE 1"); err != nil {
+			t.Fatal(err)
+		}
+
+	}()
+
+	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+	for i := 0; i < len(Users); i++ {
+		_, err = dbConn.Exec(Users[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+
+	for i := 0; i < len(Area); i++ {
+		_, err = dbConn.Exec(Area[i])
+		if err != nil {
+			t.Fatal(err)
+		}
+	}
+
+	if err = database.InitDBConnection(&dbConn, dC.GetSelectArea(), "mysql"); err != nil {
+		t.Fatal(err)
+	}
+
+	var repoArea *repositories.AreaMySQLRepository
+	if repoArea, err = repositories.NewAreaMySQLRepository(dbConn); err != nil {
+		t.Error(err)
+	}
+	area := models.Area{OwnerId: AreasObjs[0].OwnerId}
+	ids, err := repoArea.GetAreasIdsByOwnerId(&area)
+	if err != nil {
+		t.Errorf("[GetAreasIdsByOwnerId] %v", err)
+	}
+	if len(ids) == 0 {
+		t.Errorf("[GetAreasIdsByOwnerId] %v", err)
+	}
+}
+
 func TestGetAreaById(t *testing.T) {
 	var dbConn *sql.DB
 	dC := environment.Environment().GetDatabaseConnections()
