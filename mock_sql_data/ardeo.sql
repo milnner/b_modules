@@ -1,11 +1,11 @@
 -- phpMyAdmin SQL Dump
--- version 5.1.1deb5ubuntu1
+-- version 5.2.1
 -- https://www.phpmyadmin.net/
 --
--- Host: localhost:3306
--- Tempo de geração: 20-Jan-2024 às 16:07
--- Versão do servidor: 8.0.35-0ubuntu0.22.04.1
--- versão do PHP: 8.1.2-1ubuntu2.14
+-- Host: db
+-- Tempo de geração: 08/08/2024 às 13:30
+-- Versão do servidor: 8.0.39
+-- Versão do PHP: 8.2.8
 
 SET SQL_MODE = "NO_AUTO_VALUE_ON_ZERO";
 START TRANSACTION;
@@ -20,13 +20,11 @@ SET time_zone = "+00:00";
 --
 -- Banco de dados: `ardeo`
 --
-CREATE DATABASE IF NOT EXISTS `ardeo` DEFAULT CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci;
-USE `ardeo`;
 
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `answer_n_to_one`
+-- Estrutura para tabela `answer_n_to_one`
 --
 
 CREATE TABLE `answer_n_to_one` (
@@ -41,7 +39,7 @@ CREATE TABLE `answer_n_to_one` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `area`
+-- Estrutura para tabela `area`
 --
 
 CREATE TABLE `area` (
@@ -56,7 +54,7 @@ CREATE TABLE `area` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `classes`
+-- Estrutura para tabela `classes`
 --
 
 CREATE TABLE `classes` (
@@ -73,7 +71,7 @@ CREATE TABLE `classes` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `class_see_content`
+-- Estrutura para tabela `class_see_content`
 --
 
 CREATE TABLE `class_see_content` (
@@ -87,7 +85,7 @@ CREATE TABLE `class_see_content` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `class_takes_user`
+-- Estrutura para tabela `class_takes_user`
 --
 
 CREATE TABLE `class_takes_user` (
@@ -101,7 +99,7 @@ CREATE TABLE `class_takes_user` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `contents`
+-- Estrutura para tabela `contents`
 --
 
 CREATE TABLE `contents` (
@@ -117,7 +115,7 @@ CREATE TABLE `contents` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `content_see_activity`
+-- Estrutura para tabela `content_see_activity`
 --
 
 CREATE TABLE `content_see_activity` (
@@ -134,7 +132,7 @@ CREATE TABLE `content_see_activity` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `image_activities`
+-- Estrutura para tabela `image_activities`
 --
 
 CREATE TABLE `image_activities` (
@@ -149,7 +147,7 @@ CREATE TABLE `image_activities` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `one_question_n_answer_activities`
+-- Estrutura para tabela `one_question_n_answer_activities`
 --
 
 CREATE TABLE `one_question_n_answer_activities` (
@@ -163,7 +161,7 @@ CREATE TABLE `one_question_n_answer_activities` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `text_activities`
+-- Estrutura para tabela `text_activities`
 --
 
 CREATE TABLE `text_activities` (
@@ -178,7 +176,7 @@ CREATE TABLE `text_activities` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `users`
+-- Estrutura para tabela `users`
 --
 
 CREATE TABLE `users` (
@@ -186,6 +184,7 @@ CREATE TABLE `users` (
   `name` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `surname` varchar(50) CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
   `email` varchar(100) NOT NULL,
+  `professor` tinyint UNSIGNED NOT NULL,
   `entry_date` datetime NOT NULL DEFAULT CURRENT_TIMESTAMP,
   `bourn_date` datetime NOT NULL,
   `sex` enum('male','female','other') CHARACTER SET utf8mb4 COLLATE utf8mb4_0900_ai_ci NOT NULL,
@@ -196,7 +195,7 @@ CREATE TABLE `users` (
 -- --------------------------------------------------------
 
 --
--- Estrutura da tabela `user_has_area_access`
+-- Estrutura para tabela `user_has_area_access`
 --
 
 CREATE TABLE `user_has_area_access` (
@@ -213,7 +212,7 @@ CREATE TABLE `user_has_area_access` (
 --
 
 --
--- Índices para tabela `answer_n_to_one`
+-- Índices de tabela `answer_n_to_one`
 --
 ALTER TABLE `answer_n_to_one`
   ADD PRIMARY KEY (`id`),
@@ -221,14 +220,14 @@ ALTER TABLE `answer_n_to_one`
   ADD KEY `one_question_n_answer_activity_fk` (`one_question_n_answer_activity_id`);
 
 --
--- Índices para tabela `area`
+-- Índices de tabela `area`
 --
 ALTER TABLE `area`
   ADD PRIMARY KEY (`id`),
   ADD KEY `owner_id` (`owner_id`);
 
 --
--- Índices para tabela `classes`
+-- Índices de tabela `classes`
 --
 ALTER TABLE `classes`
   ADD PRIMARY KEY (`id`),
@@ -237,7 +236,7 @@ ALTER TABLE `classes`
   ADD KEY `area_id` (`area_id`);
 
 --
--- Índices para tabela `class_see_content`
+-- Índices de tabela `class_see_content`
 --
 ALTER TABLE `class_see_content`
   ADD PRIMARY KEY (`id`),
@@ -245,7 +244,7 @@ ALTER TABLE `class_see_content`
   ADD KEY `content_id` (`content_id`);
 
 --
--- Índices para tabela `class_takes_user`
+-- Índices de tabela `class_takes_user`
 --
 ALTER TABLE `class_takes_user`
   ADD PRIMARY KEY (`id`),
@@ -253,14 +252,14 @@ ALTER TABLE `class_takes_user`
   ADD KEY `class_has_user_ibfk_2` (`class_id`);
 
 --
--- Índices para tabela `contents`
+-- Índices de tabela `contents`
 --
 ALTER TABLE `contents`
   ADD PRIMARY KEY (`id`),
   ADD KEY `area_id` (`area_id`);
 
 --
--- Índices para tabela `content_see_activity`
+-- Índices de tabela `content_see_activity`
 --
 ALTER TABLE `content_see_activity`
   ADD PRIMARY KEY (`id`),
@@ -271,35 +270,35 @@ ALTER TABLE `content_see_activity`
   ADD KEY `content_s_act_one_q_n_asw_fk` (`one_question_n_answer_activity_id`);
 
 --
--- Índices para tabela `image_activities`
+-- Índices de tabela `image_activities`
 --
 ALTER TABLE `image_activities`
   ADD PRIMARY KEY (`id`),
   ADD KEY `fk_img_act_area_id` (`area_id`);
 
 --
--- Índices para tabela `one_question_n_answer_activities`
+-- Índices de tabela `one_question_n_answer_activities`
 --
 ALTER TABLE `one_question_n_answer_activities`
   ADD PRIMARY KEY (`id`),
   ADD KEY `o_que_n_ans_area_fk` (`area_id`);
 
 --
--- Índices para tabela `text_activities`
+-- Índices de tabela `text_activities`
 --
 ALTER TABLE `text_activities`
   ADD PRIMARY KEY (`id`),
   ADD KEY `txt_act_fk` (`area_id`);
 
 --
--- Índices para tabela `users`
+-- Índices de tabela `users`
 --
 ALTER TABLE `users`
   ADD PRIMARY KEY (`id`),
   ADD UNIQUE KEY `email` (`email`);
 
 --
--- Índices para tabela `user_has_area_access`
+-- Índices de tabela `user_has_area_access`
 --
 ALTER TABLE `user_has_area_access`
   ADD PRIMARY KEY (`id`),
@@ -307,7 +306,7 @@ ALTER TABLE `user_has_area_access`
   ADD KEY `user_id` (`user_id`);
 
 --
--- AUTO_INCREMENT de tabelas despejadas
+-- AUTO_INCREMENT para tabelas despejadas
 --
 
 --
@@ -383,51 +382,51 @@ ALTER TABLE `user_has_area_access`
   MODIFY `id` int NOT NULL AUTO_INCREMENT;
 
 --
--- Restrições para despejos de tabelas
+-- Restrições para tabelas despejadas
 --
 
 --
--- Limitadores para a tabela `answer_n_to_one`
+-- Restrições para tabelas `answer_n_to_one`
 --
 ALTER TABLE `answer_n_to_one`
   ADD CONSTRAINT `ans_n_to_one_area_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`),
   ADD CONSTRAINT `one_question_n_answer_activity_fk` FOREIGN KEY (`one_question_n_answer_activity_id`) REFERENCES `one_question_n_answer_activities` (`id`);
 
 --
--- Limitadores para a tabela `area`
+-- Restrições para tabelas `area`
 --
 ALTER TABLE `area`
   ADD CONSTRAINT `area_ibfk_1` FOREIGN KEY (`owner_id`) REFERENCES `users` (`id`);
 
 --
--- Limitadores para a tabela `classes`
+-- Restrições para tabelas `classes`
 --
 ALTER TABLE `classes`
   ADD CONSTRAINT `classes_ibfk_1` FOREIGN KEY (`creator_user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `classes_ibfk_2` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`);
 
 --
--- Limitadores para a tabela `class_see_content`
+-- Restrições para tabelas `class_see_content`
 --
 ALTER TABLE `class_see_content`
   ADD CONSTRAINT `class_see_content_ibfk_1` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`),
   ADD CONSTRAINT `class_see_content_ibfk_2` FOREIGN KEY (`content_id`) REFERENCES `contents` (`id`);
 
 --
--- Limitadores para a tabela `class_takes_user`
+-- Restrições para tabelas `class_takes_user`
 --
 ALTER TABLE `class_takes_user`
   ADD CONSTRAINT `class_takes_user_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `users` (`id`) ON DELETE CASCADE ON UPDATE CASCADE,
   ADD CONSTRAINT `class_takes_user_ibfk_2` FOREIGN KEY (`class_id`) REFERENCES `classes` (`id`) ON DELETE CASCADE ON UPDATE CASCADE;
 
 --
--- Limitadores para a tabela `contents`
+-- Restrições para tabelas `contents`
 --
 ALTER TABLE `contents`
   ADD CONSTRAINT `contents_ibfk_2` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`);
 
 --
--- Limitadores para a tabela `content_see_activity`
+-- Restrições para tabelas `content_see_activity`
 --
 ALTER TABLE `content_see_activity`
   ADD CONSTRAINT `content_s_act_area_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`),
@@ -437,25 +436,25 @@ ALTER TABLE `content_see_activity`
   ADD CONSTRAINT `content_s_act_text_act_fk` FOREIGN KEY (`text_activity_id`) REFERENCES `text_activities` (`id`);
 
 --
--- Limitadores para a tabela `image_activities`
+-- Restrições para tabelas `image_activities`
 --
 ALTER TABLE `image_activities`
   ADD CONSTRAINT `fk_img_act_area_id` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`);
 
 --
--- Limitadores para a tabela `one_question_n_answer_activities`
+-- Restrições para tabelas `one_question_n_answer_activities`
 --
 ALTER TABLE `one_question_n_answer_activities`
   ADD CONSTRAINT `o_que_n_ans_area_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`);
 
 --
--- Limitadores para a tabela `text_activities`
+-- Restrições para tabelas `text_activities`
 --
 ALTER TABLE `text_activities`
   ADD CONSTRAINT `txt_act_fk` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`);
 
 --
--- Limitadores para a tabela `user_has_area_access`
+-- Restrições para tabelas `user_has_area_access`
 --
 ALTER TABLE `user_has_area_access`
   ADD CONSTRAINT `user_has_area_access_ibfk_1` FOREIGN KEY (`area_id`) REFERENCES `area` (`id`),
