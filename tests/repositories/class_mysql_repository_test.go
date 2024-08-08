@@ -2,56 +2,36 @@ package repositories
 
 import (
 	"database/sql"
-	"net"
 	"strings"
 	"testing"
-	"time"
 
 	"github.com/milnner/b_modules/database"
-	"github.com/milnner/b_modules/environment"
 	"github.com/milnner/b_modules/models"
 	"github.com/milnner/b_modules/repositories"
 	repoInterfaces "github.com/milnner/b_modules/repositories/interfaces"
 )
-
-func init() {
-	port := "3306"
-
-	dC := environment.NewDatabaseConnections()
-
-	dC.SetRootConnString(RootConnString)
-
-	environment.Environment().InitDatabaseConnections(dC)
-	target := "127.0.0.1:" + port
-	conn, err := net.DialTimeout("tcp", target, 10*time.Second)
-	if err != nil {
-		panic(err)
-	}
-	conn.Close()
-}
 
 func TestClassPolimorfism(t *testing.T) {
 	var _ repoInterfaces.IClassRepository = &repositories.ClassMySQLRepository{}
 }
 func TestInsertClass(t *testing.T) {
 	var dbConn *sql.DB
-	dC := environment.Environment().GetDatabaseConnections()
 
-	err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -59,7 +39,7 @@ func TestInsertClass(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -82,7 +62,7 @@ func TestInsertClass(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -102,23 +82,22 @@ func TestInsertClass(t *testing.T) {
 
 func TestUpdateClass(t *testing.T) {
 	var dbConn *sql.DB
-	dC := environment.Environment().GetDatabaseConnections()
 
-	err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -126,7 +105,7 @@ func TestUpdateClass(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -149,7 +128,7 @@ func TestUpdateClass(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -169,21 +148,20 @@ func TestUpdateClass(t *testing.T) {
 
 func TestDeleteClass(t *testing.T) {
 	var dbConn *sql.DB
-	dC := environment.Environment().GetDatabaseConnections()
 
-	err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -191,7 +169,7 @@ func TestDeleteClass(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -213,7 +191,7 @@ func TestDeleteClass(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -235,17 +213,16 @@ func TestGetClassById(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Error(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
@@ -253,7 +230,7 @@ func TestGetClassById(t *testing.T) {
 			t.Error(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
@@ -262,7 +239,7 @@ func TestGetClassById(t *testing.T) {
 		}
 	}()
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -271,7 +248,7 @@ func TestGetClassById(t *testing.T) {
 			t.Error(err)
 		}
 	}
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -281,7 +258,7 @@ func TestGetClassById(t *testing.T) {
 		}
 	}
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Classes); i++ {
@@ -318,33 +295,32 @@ func TestGetClassById(t *testing.T) {
 
 func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_TestClassRemoveContent(t *testing.T) {
 	var dbConn *sql.DB
-	dC := environment.Environment().GetDatabaseConnections()
 
-	err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `class_see_content` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteContent(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Content.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `contents` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -352,7 +328,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -361,7 +337,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 		}
 
 	}()
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -370,7 +346,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 			t.Fatal(err)
 		}
 	}
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -380,7 +356,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 		}
 	}
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Classes); i++ {
@@ -389,7 +365,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 			t.Fatal(err)
 		}
 	}
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertContent(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Content.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Contents); i++ {
@@ -398,7 +374,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	classRepository, err := repositories.NewClassMySQLRepository(dbConn)
@@ -413,7 +389,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetUpdateClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -423,7 +399,7 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 			t.Errorf("[UpdateContentPosition] %v", err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetSelectClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var contentIds []int
@@ -441,33 +417,32 @@ func TestClassAddContent_TestClassUpdateContentPosition_TestClassGetContent_Test
 
 func TestClassAddStudent_RemoveStudent(t *testing.T) {
 	var dbConn *sql.DB
-	dC := environment.Environment().GetDatabaseConnections()
 
-	err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `class_see_content` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteContent(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Content.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `contents` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -475,7 +450,7 @@ func TestClassAddStudent_RemoveStudent(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -484,7 +459,7 @@ func TestClassAddStudent_RemoveStudent(t *testing.T) {
 		}
 
 	}()
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -493,7 +468,7 @@ func TestClassAddStudent_RemoveStudent(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -503,7 +478,7 @@ func TestClassAddStudent_RemoveStudent(t *testing.T) {
 		}
 	}
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Classes); i++ {
@@ -512,7 +487,7 @@ func TestClassAddStudent_RemoveStudent(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertContent(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Content.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Contents); i++ {
@@ -521,7 +496,7 @@ func TestClassAddStudent_RemoveStudent(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	classRepository, err := repositories.NewClassMySQLRepository(dbConn)
@@ -535,7 +510,7 @@ func TestClassAddStudent_RemoveStudent(t *testing.T) {
 			t.Errorf("[AddStudent] %v", err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetSelectClass(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var userIds []int
@@ -555,17 +530,16 @@ func TestGetClassesByIds(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Error(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
@@ -573,7 +547,7 @@ func TestGetClassesByIds(t *testing.T) {
 			t.Error(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
@@ -582,7 +556,7 @@ func TestGetClassesByIds(t *testing.T) {
 		}
 	}()
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -591,7 +565,7 @@ func TestGetClassesByIds(t *testing.T) {
 			t.Error(err)
 		}
 	}
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -601,7 +575,7 @@ func TestGetClassesByIds(t *testing.T) {
 		}
 	}
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Classes); i++ {
@@ -644,17 +618,16 @@ func TestGetClassIdsByAreaId(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteClass(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `classes` WHERE 1"); err != nil {
 			t.Error(err)
 		}
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
@@ -662,7 +635,7 @@ func TestGetClassIdsByAreaId(t *testing.T) {
 			t.Error(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Error(err)
 		}
 
@@ -671,7 +644,7 @@ func TestGetClassIdsByAreaId(t *testing.T) {
 		}
 	}()
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -680,7 +653,7 @@ func TestGetClassIdsByAreaId(t *testing.T) {
 			t.Error(err)
 		}
 	}
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -690,7 +663,7 @@ func TestGetClassIdsByAreaId(t *testing.T) {
 		}
 	}
 
-	if err := database.InitDBConnection(&dbConn, dC.GetInsertClass(), "mysql"); err != nil {
+	if err := database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetInsert(), "mysql"); err != nil {
 		t.Error(err)
 	}
 	for i := 0; i < len(Classes); i++ {

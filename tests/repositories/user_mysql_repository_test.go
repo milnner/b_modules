@@ -2,31 +2,13 @@ package repositories
 
 import (
 	"database/sql"
-	"net"
 	"testing"
-	"time"
 
 	"github.com/milnner/b_modules/database"
-	"github.com/milnner/b_modules/environment"
 	"github.com/milnner/b_modules/models"
 	"github.com/milnner/b_modules/repositories"
 	repositoryInterface "github.com/milnner/b_modules/repositories/interfaces"
 )
-
-func init() {
-	port := "3306"
-
-	dC := environment.NewDatabaseConnections()
-	dC.SetRootConnString(RootConnString)
-
-	environment.Environment().InitDatabaseConnections(dC)
-	target := "127.0.0.1:" + port
-	conn, err := net.DialTimeout("tcp", target, 10*time.Second)
-	if err != nil {
-		panic(err)
-	}
-	conn.Close()
-}
 
 func TestUserMySQLRepositoryPolimorfism(t *testing.T) {
 	var _ repositoryInterface.IUserRepository = &repositories.UserMySQLRepository{}
@@ -38,10 +20,8 @@ func TestGetUserById(t *testing.T) {
 		err    error
 	)
 
-	dc := environment.Environment().GetDatabaseConnections()
-
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err := dbConn.Exec("DELETE FROM users WHERE 1"); err != nil {
@@ -49,7 +29,7 @@ func TestGetUserById(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -62,7 +42,7 @@ func TestGetUserById(t *testing.T) {
 	testCase := UsersObjs
 	var repoUserSelect *repositories.UserMySQLRepository
 
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -95,10 +75,8 @@ func TestGetUserByEmail(t *testing.T) {
 		err    error
 	)
 
-	dc := environment.Environment().GetDatabaseConnections()
-
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err := dbConn.Exec("DELETE FROM users WHERE 1"); err != nil {
@@ -106,7 +84,7 @@ func TestGetUserByEmail(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -119,7 +97,7 @@ func TestGetUserByEmail(t *testing.T) {
 	testCase := UsersObjs
 	var repoUserSelect *repositories.UserMySQLRepository
 
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -152,17 +130,15 @@ func TestGetUsersByIds(t *testing.T) {
 		err    error
 	)
 
-	dc := environment.Environment().GetDatabaseConnections()
-
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err := dbConn.Exec("DELETE FROM users WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 	}()
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -173,7 +149,7 @@ func TestGetUsersByIds(t *testing.T) {
 
 	var testCases models.Users = UsersObjs
 
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repoUserSelect *repositories.UserMySQLRepository
@@ -209,18 +185,17 @@ func TestUpdateUser(t *testing.T) {
 		err    error
 		dbConn *sql.DB
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	testCase := UsersObjs
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM users WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 	}()
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -228,7 +203,7 @@ func TestUpdateUser(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repositoryUserInsert *repositories.UserMySQLRepository
@@ -248,18 +223,17 @@ func TestInsertUser(t *testing.T) {
 		err    error
 		dbConn *sql.DB
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	testCase := UsersObjs
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM users WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 	}()
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repositoryUserInsert *repositories.UserMySQLRepository
@@ -278,18 +252,17 @@ func TestDeleteUser(t *testing.T) {
 		err    error
 		dbConn *sql.DB
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	testCase := UsersObjs
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM users WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 	}()
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -298,7 +271,7 @@ func TestDeleteUser(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 

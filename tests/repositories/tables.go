@@ -1,9 +1,11 @@
 package repositories
 
 import (
+	"net"
 	"reflect"
 	"time"
 
+	"github.com/milnner/b_modules/database"
 	"github.com/milnner/b_modules/models"
 )
 
@@ -46,6 +48,7 @@ var (
 	OneQuestionNAnswerActivityObjs []models.OneQuestionNAnswerActivity
 	AnswerNToOne                   []string
 	AnswerNToOneObjs               []models.AnswerNToOne
+	DatabaseConn                   *database.DatabaseConn
 )
 
 func init() {
@@ -68,12 +71,12 @@ func init() {
 	}
 
 	Users = []string{
-		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (1,'name1','surname1','user1@1.com','" + timeStr + "', '" + timeStr + "', 'male','hash');",
-		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (2,'name2','surname2','user2@2.com','" + timeStr + "', '" + timeStr + "', 'female','hash');",
-		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (3,'name3','surname3','user3@3.com','" + timeStr + "', '" + timeStr + "', 'other','hash');",
-		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (4,'name4','surname4','user4@4.com','" + timeStr + "', '" + timeStr + "', 'male','hash');",
-		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (5,'name5','surname5','user5@5.com','" + timeStr + "', '" + timeStr + "', 'female','hash');",
-		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (6,'name6','surname6','user6@6.com','" + timeStr + "', '" + timeStr + "', 'other','hash');",
+		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (1,'name1','surname1','user1@1.com', 0, '" + timeStr + "', '" + timeStr + "', 'male','hash');",
+		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (2,'name2','surname2','user2@2.com', 0, '" + timeStr + "', '" + timeStr + "', 'female','hash');",
+		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (3,'name3','surname3','user3@3.com', 0, '" + timeStr + "', '" + timeStr + "', 'other','hash');",
+		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (4,'name4','surname4','user4@4.com', 0, '" + timeStr + "', '" + timeStr + "', 'male','hash');",
+		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (5,'name5','surname5','user5@5.com', 0, '" + timeStr + "', '" + timeStr + "', 'female','hash');",
+		"INSERT INTO `users`(`id`, `name`, `surname`, `email`, `professor`, `entry_date`, `bourn_date`, `sex`, `hash`) VALUES (6,'name6','surname6','user6@6.com', 0, '" + timeStr + "', '" + timeStr + "', 'other','hash');",
 	}
 
 	UsersObjs = []models.User{
@@ -184,4 +187,14 @@ func init() {
 		*models.NewAnswerNToOne(2, 1, 1, 0, answer1, 1),
 	}
 
+	port := "3306"
+	DatabaseConn = database.NewDatabaseConn()
+	database.SetRoot(DatabaseConn, RootConnString)
+
+	target := "127.0.0.1:" + port
+	conn, err := net.DialTimeout("tcp", target, 10*time.Second)
+	if err != nil {
+		panic(err)
+	}
+	conn.Close()
 }

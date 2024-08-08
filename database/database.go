@@ -7,7 +7,7 @@ import (
 )
 
 // ex: err := initDBConnection(conn, "user:password@tcp(host:port)/database", "driver");
-func InitDBConnection(conn **sql.DB, stringForConn, sqlDriverName string) error {
+func InitDatabaseConn(conn **sql.DB, stringForConn, sqlDriverName string) error {
 	var err error
 	*conn, err = sql.Open(sqlDriverName, stringForConn)
 	if err != nil {

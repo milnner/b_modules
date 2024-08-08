@@ -8,7 +8,6 @@ import (
 	"time"
 
 	"github.com/milnner/b_modules/database"
-	"github.com/milnner/b_modules/environment"
 	"github.com/milnner/b_modules/models"
 	"github.com/milnner/b_modules/repositories"
 	repositoryInterface "github.com/milnner/b_modules/repositories/interfaces"
@@ -23,14 +22,14 @@ func TestTextActivityMySQLRepositoryInsert(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dc := environment.Environment().GetDatabaseConnections()
-	database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql")
+
+	database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql")
 	var repo *repositories.TextActivityMySQLRepository
 	if repo, err = repositories.NewTextActivityMySQLRepository(dbConn); err != nil {
 		t.Fatal(err)
 	}
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteTxtAct(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -38,7 +37,7 @@ func TestTextActivityMySQLRepositoryInsert(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		_, err := dbConn.Exec("DELETE FROM `area` WHERE 1")
@@ -46,7 +45,7 @@ func TestTextActivityMySQLRepositoryInsert(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -57,7 +56,7 @@ func TestTextActivityMySQLRepositoryInsert(t *testing.T) {
 
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -67,7 +66,7 @@ func TestTextActivityMySQLRepositoryInsert(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -89,17 +88,17 @@ func TestTextActivityMySQLRepositoryDelete(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dc := environment.Environment().GetDatabaseConnections()
-	database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql")
+
+	database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql")
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteTxtAct(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `text_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteArea(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -108,7 +107,7 @@ func TestTextActivityMySQLRepositoryDelete(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -119,7 +118,7 @@ func TestTextActivityMySQLRepositoryDelete(t *testing.T) {
 
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -129,7 +128,7 @@ func TestTextActivityMySQLRepositoryDelete(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -139,7 +138,7 @@ func TestTextActivityMySQLRepositoryDelete(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(TextActivity); i++ {
@@ -150,7 +149,7 @@ func TestTextActivityMySQLRepositoryDelete(t *testing.T) {
 	}
 
 	testcase := TextActivityObjs
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.TextActivityMySQLRepository
@@ -169,17 +168,17 @@ func TestTextActivityMySQLRepositoryUpdate(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dc := environment.Environment().GetDatabaseConnections()
-	database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql")
+
+	database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql")
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteTxtAct(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `text_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteArea(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -188,7 +187,7 @@ func TestTextActivityMySQLRepositoryUpdate(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -199,7 +198,7 @@ func TestTextActivityMySQLRepositoryUpdate(t *testing.T) {
 
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -209,7 +208,7 @@ func TestTextActivityMySQLRepositoryUpdate(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -219,7 +218,7 @@ func TestTextActivityMySQLRepositoryUpdate(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(TextActivity); i++ {
@@ -230,7 +229,7 @@ func TestTextActivityMySQLRepositoryUpdate(t *testing.T) {
 	}
 
 	testcase := TextActivityObjs
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.TextActivityMySQLRepository
@@ -251,17 +250,17 @@ func TestTextActivityMySQLRepositoryGetTextActivityById(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dc := environment.Environment().GetDatabaseConnections()
-	database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql")
+
+	database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql")
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteTxtAct(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `text_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteArea(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -270,7 +269,7 @@ func TestTextActivityMySQLRepositoryGetTextActivityById(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -281,7 +280,7 @@ func TestTextActivityMySQLRepositoryGetTextActivityById(t *testing.T) {
 
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -291,7 +290,7 @@ func TestTextActivityMySQLRepositoryGetTextActivityById(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -301,7 +300,7 @@ func TestTextActivityMySQLRepositoryGetTextActivityById(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(TextActivity); i++ {
@@ -312,7 +311,7 @@ func TestTextActivityMySQLRepositoryGetTextActivityById(t *testing.T) {
 	}
 
 	testcase := TextActivityObjs
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.TextActivityMySQLRepository
@@ -339,17 +338,17 @@ func TestTextActivityMySQLRepositoryGetTextActivitiesByIds(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dc := environment.Environment().GetDatabaseConnections()
-	database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql")
+
+	database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql")
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteTxtAct(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `text_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteArea(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -358,7 +357,7 @@ func TestTextActivityMySQLRepositoryGetTextActivitiesByIds(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -369,7 +368,7 @@ func TestTextActivityMySQLRepositoryGetTextActivitiesByIds(t *testing.T) {
 
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -379,7 +378,7 @@ func TestTextActivityMySQLRepositoryGetTextActivitiesByIds(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -389,7 +388,7 @@ func TestTextActivityMySQLRepositoryGetTextActivitiesByIds(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(TextActivity); i++ {
@@ -400,7 +399,7 @@ func TestTextActivityMySQLRepositoryGetTextActivitiesByIds(t *testing.T) {
 	}
 
 	testcase := TextActivityObjs
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.TextActivityMySQLRepository
@@ -434,17 +433,17 @@ func TestGetTextActivitiesByAreaId(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dc := environment.Environment().GetDatabaseConnections()
-	database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql")
+
+	database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql")
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dc.GetDeleteTxtAct(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `text_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteArea(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -453,7 +452,7 @@ func TestGetTextActivitiesByAreaId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDBConnection(&dbConn, dc.GetDeleteUser(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -464,7 +463,7 @@ func TestGetTextActivitiesByAreaId(t *testing.T) {
 
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -474,7 +473,7 @@ func TestGetTextActivitiesByAreaId(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -484,7 +483,7 @@ func TestGetTextActivitiesByAreaId(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dc.GetInsertTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(TextActivity); i++ {
@@ -495,7 +494,7 @@ func TestGetTextActivitiesByAreaId(t *testing.T) {
 	}
 
 	testcase := TextActivityObjs
-	if err = database.InitDBConnection(&dbConn, dc.GetSelectTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.TextActivityMySQLRepository
@@ -525,17 +524,16 @@ func TestGetTextActivityIdsByAreaId(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteImgAct(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `text_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -544,7 +542,7 @@ func TestGetTextActivityIdsByAreaId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -555,7 +553,7 @@ func TestGetTextActivityIdsByAreaId(t *testing.T) {
 
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -565,7 +563,7 @@ func TestGetTextActivityIdsByAreaId(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -575,7 +573,7 @@ func TestGetTextActivityIdsByAreaId(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(TextActivity); i++ {
@@ -589,7 +587,7 @@ func TestGetTextActivityIdsByAreaId(t *testing.T) {
 	if textRepository, err = repositories.NewTextActivityMySQLRepository(dbConn); err != nil {
 		t.Fatal(err)
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetUpdateTxtAct(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.TextActivity.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 

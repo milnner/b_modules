@@ -3,52 +3,32 @@ package repositories
 import (
 	"bytes"
 	"database/sql"
-	"net"
 	"testing"
-	"time"
 
 	"github.com/milnner/b_modules/database"
-	"github.com/milnner/b_modules/environment"
 	"github.com/milnner/b_modules/models"
 	"github.com/milnner/b_modules/repositories"
 	repoInterfaces "github.com/milnner/b_modules/repositories/interfaces"
 )
 
-func init() {
-	port := "3306"
-
-	dC := environment.NewDatabaseConnections()
-	dC.SetRootConnString(RootConnString)
-
-	environment.Environment().InitDatabaseConnections(dC)
-	target := "127.0.0.1:" + port
-	conn, err := net.DialTimeout("tcp", target, 10*time.Second)
-	if err != nil {
-		panic(err)
-	}
-	conn.Close()
-}
-
 func TestPolimorfismAnswerNToOneMySQLRepository(t *testing.T) {
 	var _ repoInterfaces.IAnswerNToOneRepository = &repositories.AnswerNToOneMySQLRepository{}
 }
-
 func TestInsertAnswerNToOneMySQLRepository(t *testing.T) {
 	var (
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteAnswerNToOneActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `answer_n_to_one` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -56,7 +36,7 @@ func TestInsertAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -64,7 +44,7 @@ func TestInsertAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -73,7 +53,7 @@ func TestInsertAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -83,7 +63,7 @@ func TestInsertAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -92,7 +72,7 @@ func TestInsertAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -104,7 +84,7 @@ func TestInsertAnswerNToOneMySQLRepository(t *testing.T) {
 	}
 
 	testcase := AnswerNToOneObjs
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertAnswerNToOneActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.AnswerNToOneMySQLRepository
@@ -123,17 +103,16 @@ func TestUpdateAnswerNToOneMySQLRepository(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteAnswerNToOneActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `answer_n_to_one` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -141,7 +120,7 @@ func TestUpdateAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -149,7 +128,7 @@ func TestUpdateAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -158,7 +137,7 @@ func TestUpdateAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -168,7 +147,7 @@ func TestUpdateAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -177,7 +156,7 @@ func TestUpdateAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -195,7 +174,7 @@ func TestUpdateAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}
 	testcase := AnswerNToOneObjs
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertAnswerNToOneActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.AnswerNToOneMySQLRepository
@@ -216,17 +195,16 @@ func TestDeleteAnswerNToOneMySQLRepository(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteAnswerNToOneActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `answer_n_to_one` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -234,7 +212,7 @@ func TestDeleteAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -242,7 +220,7 @@ func TestDeleteAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -251,7 +229,7 @@ func TestDeleteAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -261,7 +239,7 @@ func TestDeleteAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -270,7 +248,7 @@ func TestDeleteAnswerNToOneMySQLRepository(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -288,7 +266,7 @@ func TestDeleteAnswerNToOneMySQLRepository(t *testing.T) {
 		}
 	}
 	testcase := AnswerNToOneObjs
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertAnswerNToOneActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.AnswerNToOneMySQLRepository
@@ -307,17 +285,16 @@ func TestGetAnswerNToOneById(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteAnswerNToOneActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `answer_n_to_one` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -325,7 +302,7 @@ func TestGetAnswerNToOneById(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -333,7 +310,7 @@ func TestGetAnswerNToOneById(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -342,7 +319,7 @@ func TestGetAnswerNToOneById(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -352,7 +329,7 @@ func TestGetAnswerNToOneById(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -361,7 +338,7 @@ func TestGetAnswerNToOneById(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -379,7 +356,7 @@ func TestGetAnswerNToOneById(t *testing.T) {
 		}
 	}
 	testcase := AnswerNToOneObjs
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertAnswerNToOneActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.AnswerNToOneMySQLRepository
@@ -408,17 +385,16 @@ func TestGetAnswersNToOneByOneQuestionNAnswerActivityId(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteAnswerNToOneActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `answer_n_to_one` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -426,7 +402,7 @@ func TestGetAnswersNToOneByOneQuestionNAnswerActivityId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -434,7 +410,7 @@ func TestGetAnswersNToOneByOneQuestionNAnswerActivityId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -443,7 +419,7 @@ func TestGetAnswersNToOneByOneQuestionNAnswerActivityId(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -453,7 +429,7 @@ func TestGetAnswersNToOneByOneQuestionNAnswerActivityId(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -462,7 +438,7 @@ func TestGetAnswersNToOneByOneQuestionNAnswerActivityId(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -480,7 +456,7 @@ func TestGetAnswersNToOneByOneQuestionNAnswerActivityId(t *testing.T) {
 		}
 	}
 	testcase := AnswerNToOneObjs
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertAnswerNToOneActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.AnswerNToOneMySQLRepository
@@ -512,17 +488,16 @@ func TestGetAnswersNToOneByIds(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteAnswerNToOneActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `answer_n_to_one` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -530,7 +505,7 @@ func TestGetAnswersNToOneByIds(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -538,7 +513,7 @@ func TestGetAnswersNToOneByIds(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -547,7 +522,7 @@ func TestGetAnswersNToOneByIds(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -557,7 +532,7 @@ func TestGetAnswersNToOneByIds(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -566,7 +541,7 @@ func TestGetAnswersNToOneByIds(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -584,7 +559,7 @@ func TestGetAnswersNToOneByIds(t *testing.T) {
 		}
 	}
 	testcase := AnswerNToOneObjs
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertAnswerNToOneActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.AnswerNToOneMySQLRepository
@@ -619,17 +594,16 @@ func TestGetAnswersNToOneIdsByOneQuestionNAnswerActivityId(t *testing.T) {
 		dbConn *sql.DB
 		err    error
 	)
-	dC := environment.Environment().GetDatabaseConnections()
 
 	defer func() {
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteAnswerNToOneActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 		if _, err = dbConn.Exec("DELETE FROM `answer_n_to_one` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteOneQuestionNAnswerActivity(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -637,7 +611,7 @@ func TestGetAnswersNToOneIdsByOneQuestionNAnswerActivityId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteArea(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -645,7 +619,7 @@ func TestGetAnswersNToOneIdsByOneQuestionNAnswerActivityId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDBConnection(&dbConn, dC.GetDeleteUser(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -654,7 +628,7 @@ func TestGetAnswersNToOneIdsByOneQuestionNAnswerActivityId(t *testing.T) {
 		}
 	}()
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertUser(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Users); i++ {
@@ -664,7 +638,7 @@ func TestGetAnswersNToOneIdsByOneQuestionNAnswerActivityId(t *testing.T) {
 		}
 	}
 
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertArea(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	for i := 0; i < len(Area); i++ {
@@ -673,7 +647,7 @@ func TestGetAnswersNToOneIdsByOneQuestionNAnswerActivityId(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertOneQuestionNAnswerActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.OneQuestionNAnswerActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -690,7 +664,7 @@ func TestGetAnswersNToOneIdsByOneQuestionNAnswerActivityId(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDBConnection(&dbConn, dC.GetInsertAnswerNToOneActivity(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.AnswerNToOneActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repo *repositories.AnswerNToOneMySQLRepository
