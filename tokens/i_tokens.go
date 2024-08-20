@@ -7,7 +7,7 @@ import (
 
 type IJWTokenizator interface {
 	GenerateToken(mapClaims map[string]interface{}) (string, error)
-	ValidadeToken(tokenString string) (*map[string]interface{}, error)
+	ValidateToken(tokenString string) (*map[string]interface{}, error)
 }
 
 func ExtractTokenFromRequest(r *http.Request) string {

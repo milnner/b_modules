@@ -1,4 +1,4 @@
-package modules
+package hasher
 
 type IHasher interface {
 	Hash([]byte) ([]byte, error)

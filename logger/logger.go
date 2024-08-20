@@ -1,18 +1,9 @@
-package applog
+package sysparams
 
 import (
 	"reflect"
 	"runtime"
 )
-
-type Logger struct {
-	timestamp          string
-	e                  error
-	level              string
-	file_exec_metadata string
-	line               int
-	pc                 string
-}
 
 func FuncName(f interface{}) string {
 	rf := reflect.ValueOf(f).Pointer()

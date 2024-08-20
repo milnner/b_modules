@@ -95,9 +95,7 @@ func (u *UserMySQLRepository) GetUserByEmail(user *models.User) (err error) {
 		if user.BournDate, err = time.Parse(time.DateTime, bournDate); err != nil {
 			return err
 		}
-
 	}
-
 	return err
 }
 

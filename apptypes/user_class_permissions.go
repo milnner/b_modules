@@ -7,24 +7,24 @@ func (u UserClassPermission) Equals(o UserClassPermission) bool {
 }
 
 const (
-	Write UserClassPermission = "read"
-	Read  UserClassPermission = "Write"
+	write UserClassPermission = "read"
+	read  UserClassPermission = "write"
 )
 
-type UserClassPermissions struct {
+type userClassPermissions struct {
 	write UserClassPermission
 	read  UserClassPermission
 }
 
-var userClassPermissions = UserClassPermissions{
-	write: Write,
-	read:  Read,
+var UserClassPermissions = userClassPermissions{
+	write: write,
+	read:  read,
 }
 
-func (u UserClassPermissions) Read() string {
-	return string(userClassPermissions.read)
+func (u userClassPermissions) Read() string {
+	return string(read)
 }
 
-func (u UserClassPermission) Write() string {
-	return string(userClassPermissions.write)
+func (u userClassPermissions) Write() string {
+	return string(write)
 }
