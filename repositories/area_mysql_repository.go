@@ -79,13 +79,13 @@ func (u *AreaMySQLRepository) Insert(area *models.Area) (err error) {
 	return err
 }
 func (u *AreaMySQLRepository) Update(area *models.Area) (err error) {
-	statement := "UPDATE `area` SET `title`=?,`description`=?, `owner_id`=? WHERE `id`=?"
-	_, err = u.db.Exec(statement, area.Title, area.Description, area.OwnerId, area.Id)
+	statement := "UPDATE `area` SET `title`=?,`description`=?, `owner_id`=? WHERE `id`=? and `owner_id`=?"
+	_, err = u.db.Exec(statement, area.Title, area.Description, area.OwnerId, area.Id, area.OwnerId)
 	return err
 }
 func (u *AreaMySQLRepository) Delete(area *models.Area) (err error) {
-	statement := "UPDATE `area` SET `activated`=0 WHERE `id`=?"
-	_, err = u.db.Exec(statement, area.Id)
+	statement := "UPDATE `area` SET `activated`=0 WHERE `id`=? and `owner_id`=?"
+	_, err = u.db.Exec(statement, area.Id, area.OwnerId)
 	return err
 }
 

@@ -11,6 +11,7 @@ import (
 	"github.com/milnner/b_modules/apptypes"
 	createCtrl "github.com/milnner/b_modules/controllers/create"
 	"github.com/milnner/b_modules/database"
+	"github.com/milnner/b_modules/repositories"
 	"github.com/milnner/b_modules/tests/config"
 )
 
@@ -53,7 +54,17 @@ func TestInsertUser(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	ctrl := createCtrl.NewCreateUserController(config.DatabaseConn, config.Logger, "mysql")
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+		t.Fatal(err)
+		return
+	}
+	userRepo, err := repositories.NewUserMySQLRepository(dbConn)
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+
+	ctrl := createCtrl.NewCreateUserController(userRepo, config.Logger)
 	// Cria um ResponseRecorder para capturar o response
 	handler := http.HandlerFunc(ctrl.Handler)
 

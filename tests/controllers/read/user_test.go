@@ -11,6 +11,7 @@ import (
 	readCtrl "github.com/milnner/b_modules/controllers/read"
 	"github.com/milnner/b_modules/database"
 	"github.com/milnner/b_modules/models"
+	"github.com/milnner/b_modules/repositories"
 	"github.com/milnner/b_modules/tests/config"
 )
 
@@ -38,8 +39,17 @@ func TestReadUser(t *testing.T) {
 			t.Fatal(err)
 		}
 	}
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetSelect(), "mysql"); err != nil {
+		t.Fatal(err)
+		return
+	}
 
-	ctrl := readCtrl.NewReadUserController(config.DatabaseConn, config.Logger, config.JwtSecretKey, "mysql")
+	userRepo, err := repositories.NewUserMySQLRepository(dbConn)
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+	ctrl := readCtrl.NewReadUserController(userRepo, config.Logger)
 
 	var b []byte
 	bd := bytes.NewBuffer(b)

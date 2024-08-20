@@ -41,7 +41,18 @@ func TestDeleteUser(t *testing.T) {
 		}
 	}
 
-	ctrl := deleteCtrl.NewDeleteUserController(config.DatabaseConn, config.Logger, config.JwtSecretKey, "mysql")
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		t.Fatal(err)
+		return
+	}
+
+	userRepo, err := repositories.NewUserMySQLRepository(dbConn)
+	if err != nil {
+		t.Fatal(err)
+		return
+	}
+
+	ctrl := deleteCtrl.NewDeleteUserController(userRepo, config.Logger)
 
 	var b []byte
 	bd := bytes.NewBuffer(b)

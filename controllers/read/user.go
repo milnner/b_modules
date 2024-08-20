@@ -1,29 +1,24 @@
 package read
 
 import (
-	"database/sql"
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
-	"github.com/milnner/b_modules/database"
 	errapp "github.com/milnner/b_modules/errors"
 	"github.com/milnner/b_modules/models"
-	"github.com/milnner/b_modules/repositories"
+	iRepositories "github.com/milnner/b_modules/repositories/interfaces"
 
 	readService "github.com/milnner/b_modules/services/read"
 )
 
 type ReadUserController struct {
-	*database.DatabaseConn
 	*log.Logger
-	jwtSecretKey string
-	dbDriver     string
+	userRepo iRepositories.IUserRepository
 }
 
-func NewReadUserController(dbConn *database.DatabaseConn, logger *log.Logger, jwtSecretKey string, dbDriver string) *ReadUserController {
-	return &ReadUserController{Logger: logger, jwtSecretKey: jwtSecretKey, DatabaseConn: dbConn, dbDriver: dbDriver}
+func NewReadUserController(userRepo iRepositories.IUserRepository, logger *log.Logger) *ReadUserController {
+	return &ReadUserController{Logger: logger, userRepo: userRepo}
 }
 
 func (u *ReadUserController) Handler(w http.ResponseWriter, r *http.Request) {
@@ -35,21 +30,7 @@ func (u *ReadUserController) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var db *sql.DB
-	var repo *repositories.UserMySQLRepository
-	fmt.Println(u.dbDriver)
-	if err = database.InitDatabaseConn(&db, u.DatabaseConn.User.GetSelect(), u.dbDriver); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	repo, err = repositories.NewUserMySQLRepository(db)
-	if err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
-	readSvc := readService.NewReadUserSvc(&user, repo)
+	readSvc := readService.NewReadUserSvc(&user, u.userRepo)
 
 	if err = readSvc.Run(); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
