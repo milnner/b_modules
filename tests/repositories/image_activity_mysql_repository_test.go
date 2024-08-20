@@ -9,6 +9,7 @@ import (
 	"github.com/milnner/b_modules/models"
 	"github.com/milnner/b_modules/repositories"
 	repositoryInterface "github.com/milnner/b_modules/repositories/interfaces"
+	"github.com/milnner/b_modules/tests/config"
 )
 
 func TestImageActivityMySQLRepositoryPolimorfism(t *testing.T) {
@@ -22,14 +23,14 @@ func TestInsertImageActivity(t *testing.T) {
 	)
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -38,7 +39,7 @@ func TestInsertImageActivity(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -49,28 +50,28 @@ func TestInsertImageActivity(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
 	var imageRepository repositoryInterface.IImageActivityRepository
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -78,7 +79,7 @@ func TestInsertImageActivity(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testCases := ImageActivityObjs
+	testCases := config.ImageActivityObjs
 
 	for _, tc := range testCases {
 		if err = imageRepository.Insert(&tc); err != nil {
@@ -94,14 +95,14 @@ func TestUpdateImageActivity(t *testing.T) {
 	)
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -110,7 +111,7 @@ func TestUpdateImageActivity(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -121,38 +122,38 @@ func TestUpdateImageActivity(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(ImageActivity); i++ {
-		_, err = dbConn.Exec(ImageActivity[i])
+	for i := 0; i < len(config.ImageActivity); i++ {
+		_, err = dbConn.Exec(config.ImageActivity[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
 	var imageRepository repositoryInterface.IImageActivityRepository
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -160,7 +161,7 @@ func TestUpdateImageActivity(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testCases := ImageActivityObjs
+	testCases := config.ImageActivityObjs
 
 	for _, tc := range testCases {
 		tc.Title = "New"
@@ -177,14 +178,14 @@ func TestGetImageActivityById(t *testing.T) {
 	)
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -193,7 +194,7 @@ func TestGetImageActivityById(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -204,38 +205,38 @@ func TestGetImageActivityById(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(ImageActivity); i++ {
-		_, err = dbConn.Exec(ImageActivity[i])
+	for i := 0; i < len(config.ImageActivity); i++ {
+		_, err = dbConn.Exec(config.ImageActivity[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
 	var imageRepository repositoryInterface.IImageActivityRepository
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -243,7 +244,7 @@ func TestGetImageActivityById(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testCases := ImageActivityObjs
+	testCases := config.ImageActivityObjs
 
 	for _, tc := range testCases {
 		u := &models.ImageActivity{Id: tc.Id}
@@ -268,14 +269,14 @@ func TestGetImageActivitiesByIds(t *testing.T) {
 	)
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -284,7 +285,7 @@ func TestGetImageActivitiesByIds(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -295,37 +296,37 @@ func TestGetImageActivitiesByIds(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(ImageActivity); i++ {
-		_, err = dbConn.Exec(ImageActivity[i])
+	for i := 0; i < len(config.ImageActivity); i++ {
+		_, err = dbConn.Exec(config.ImageActivity[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -334,7 +335,7 @@ func TestGetImageActivitiesByIds(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testCases := ImageActivityObjs
+	testCases := config.ImageActivityObjs
 
 	imgActs := []models.ImageActivity{{Id: 1}, {Id: 2}}
 
@@ -364,14 +365,14 @@ func TestDeleteImageActivity(t *testing.T) {
 	)
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -380,7 +381,7 @@ func TestDeleteImageActivity(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -391,39 +392,39 @@ func TestDeleteImageActivity(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < len(ImageActivity); i++ {
-		_, err = dbConn.Exec(ImageActivity[i])
+	for i := 0; i < len(config.ImageActivity); i++ {
+		_, err = dbConn.Exec(config.ImageActivity[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
 	var imageRepository repositoryInterface.IImageActivityRepository
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -431,7 +432,7 @@ func TestDeleteImageActivity(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testCases := ImageActivityObjs
+	testCases := config.ImageActivityObjs
 
 	for _, tc := range testCases {
 		if err := imageRepository.Delete(&tc); err != nil {
@@ -447,14 +448,14 @@ func TestGetImageActivitiesByAreaId(t *testing.T) {
 	)
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -463,7 +464,7 @@ func TestGetImageActivitiesByAreaId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -474,38 +475,38 @@ func TestGetImageActivitiesByAreaId(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(ImageActivity); i++ {
-		_, err = dbConn.Exec(ImageActivity[i])
+	for i := 0; i < len(config.ImageActivity); i++ {
+		_, err = dbConn.Exec(config.ImageActivity[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
 	var imageRepository repositoryInterface.IImageActivityRepository
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -513,11 +514,11 @@ func TestGetImageActivitiesByAreaId(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testCases := ImageActivityObjs
+	testCases := config.ImageActivityObjs
 
 	var imgActs []models.ImageActivity
 
-	areaTests := AreasObjs[0]
+	areaTests := config.AreasObjs[0]
 	if imgActs, err = imageRepository.GetImageActivitiesByAreaId(&areaTests); err != nil {
 		t.Errorf("[ImageActivity][GetImageActivitiesByAreaId][%v]\n", err.Error())
 	}
@@ -548,14 +549,14 @@ func TestGetImageActivityIdsByAreaId(t *testing.T) {
 	)
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
 		if _, err = dbConn.Exec("DELETE FROM `image_activities` WHERE 1"); err != nil {
 			t.Fatal(err)
 		}
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -564,7 +565,7 @@ func TestGetImageActivityIdsByAreaId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql")
+		err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql")
 		if err != nil {
 			t.Fatal(err)
 		}
@@ -575,38 +576,38 @@ func TestGetImageActivityIdsByAreaId(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(ImageActivity); i++ {
-		_, err = dbConn.Exec(ImageActivity[i])
+	for i := 0; i < len(config.ImageActivity); i++ {
+		_, err = dbConn.Exec(config.ImageActivity[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
 	var imageRepository repositoryInterface.IImageActivityRepository
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.ImageActivity.GetUpdate(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -614,11 +615,11 @@ func TestGetImageActivityIdsByAreaId(t *testing.T) {
 		t.Fatal(err)
 	}
 
-	testCases := ImageActivityObjs
+	testCases := config.ImageActivityObjs
 
 	var imgActsIds []int
 
-	areaTests := AreasObjs[0]
+	areaTests := config.AreasObjs[0]
 	if imgActsIds, err = imageRepository.GetImageActivityIdsByAreaId(&areaTests); err != nil {
 		t.Errorf("[ImageActivity][GetImageActivitiesByAreaId][%v]\n", err.Error())
 	}

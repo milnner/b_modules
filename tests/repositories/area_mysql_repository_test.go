@@ -9,6 +9,7 @@ import (
 	"github.com/milnner/b_modules/models"
 	"github.com/milnner/b_modules/repositories"
 	repoInterfaces "github.com/milnner/b_modules/repositories/interfaces"
+	"github.com/milnner/b_modules/tests/config"
 )
 
 func TestAreaMySQLRepositoryPolimorfism(t *testing.T) {
@@ -18,15 +19,15 @@ func TestAreaMySQLRepositoryPolimorfism(t *testing.T) {
 func TestGetAreasIdsByOwnerId(t *testing.T) {
 	var dbConn *sql.DB
 
-	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
-		t.Errorf(DatabaseConn.User.GetInsert())
+		t.Errorf(config.DatabaseConn.User.GetInsert())
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -34,7 +35,7 @@ func TestGetAreasIdsByOwnerId(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -44,28 +45,28 @@ func TestGetAreasIdsByOwnerId(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -73,7 +74,7 @@ func TestGetAreasIdsByOwnerId(t *testing.T) {
 	if repoArea, err = repositories.NewAreaMySQLRepository(dbConn); err != nil {
 		t.Error(err)
 	}
-	area := models.Area{OwnerId: AreasObjs[0].OwnerId}
+	area := models.Area{OwnerId: config.AreasObjs[0].OwnerId}
 	ids, err := repoArea.GetAreasIdsByOwnerId(&area)
 	if err != nil {
 		t.Errorf("[GetAreasIdsByOwnerId] %v", err)
@@ -86,14 +87,14 @@ func TestGetAreasIdsByOwnerId(t *testing.T) {
 func TestGetAreaById(t *testing.T) {
 	var dbConn *sql.DB
 
-	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -101,7 +102,7 @@ func TestGetAreaById(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -111,28 +112,28 @@ func TestGetAreaById(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -140,7 +141,7 @@ func TestGetAreaById(t *testing.T) {
 	if repoArea, err = repositories.NewAreaMySQLRepository(dbConn); err != nil {
 		t.Error(err)
 	}
-	for _, tc := range AreasObjs {
+	for _, tc := range config.AreasObjs {
 		area := models.Area{Id: tc.Id}
 		if err = repoArea.GetAreaById(&area); err != nil {
 			t.Errorf("[GetAreaById] %v", err)
@@ -160,13 +161,13 @@ func TestGetAreaById(t *testing.T) {
 func TestInsertUser_GetUsersIdsByArea_GetPermission_RemoveUser(t *testing.T) {
 	var dbConn *sql.DB
 
-	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -177,7 +178,7 @@ func TestInsertUser_GetUsersIdsByArea_GetPermission_RemoveUser(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -187,28 +188,28 @@ func TestInsertUser_GetUsersIdsByArea_GetPermission_RemoveUser(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -216,12 +217,12 @@ func TestInsertUser_GetUsersIdsByArea_GetPermission_RemoveUser(t *testing.T) {
 	if repoArea, err = repositories.NewAreaMySQLRepository(dbConn); err != nil {
 		t.Error(err)
 	}
-	for _, tc := range UsersObjs {
-		if err = repoArea.InsertUser(&AreasObjs[0], &tc); err != nil {
+	for _, tc := range config.UsersObjs {
+		if err = repoArea.InsertUser(&config.AreasObjs[0], &tc); err != nil {
 			t.Errorf("[InsertUser]%v", err)
 		}
 	}
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -229,19 +230,19 @@ func TestInsertUser_GetUsersIdsByArea_GetPermission_RemoveUser(t *testing.T) {
 		t.Error(err)
 	}
 	var ids []int
-	if ids, err = repoArea.GetUserIdsByAreaId(&AreasObjs[0]); err != nil {
+	if ids, err = repoArea.GetUserIdsByAreaId(&config.AreasObjs[0]); err != nil {
 		t.Errorf("[GetUsersIdsByArea] %v", err)
 	}
-	if len(ids) != len(UsersObjs) {
-		t.Errorf("[GetUsersIdsByArea] ids: %v, users: %v", len(ids), len(UsersObjs))
+	if len(ids) != len(config.UsersObjs) {
+		t.Errorf("[GetUsersIdsByArea] ids: %v, users: %v", len(ids), len(config.UsersObjs))
 	}
-	for _, tc := range UsersObjs {
-		if err = repoArea.GetPermission(&AreasObjs[0], &tc); err != nil {
+	for _, tc := range config.UsersObjs {
+		if err = repoArea.GetPermission(&config.AreasObjs[0], &tc); err != nil {
 			t.Errorf("[GetPermission]%v", err)
 		}
 	}
-	for _, tc := range UsersObjs {
-		if err = repoArea.RemoveUser(&AreasObjs[0], &tc); err != nil {
+	for _, tc := range config.UsersObjs {
+		if err = repoArea.RemoveUser(&config.AreasObjs[0], &tc); err != nil {
 			t.Errorf("[RemoveUser] %v", err)
 		}
 	}
@@ -250,14 +251,14 @@ func TestInsertUser_GetUsersIdsByArea_GetPermission_RemoveUser(t *testing.T) {
 func TestInsertArea(t *testing.T) {
 	var dbConn *sql.DB
 
-	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -265,7 +266,7 @@ func TestInsertArea(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -275,16 +276,16 @@ func TestInsertArea(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 	var repoArea *repositories.AreaMySQLRepository
@@ -292,7 +293,7 @@ func TestInsertArea(t *testing.T) {
 		t.Error(err)
 	}
 
-	for _, tc := range AreasObjs {
+	for _, tc := range config.AreasObjs {
 		if err = repoArea.Insert(&tc); err != nil {
 			t.Errorf("[InsertArea] %v", err)
 		}
@@ -303,14 +304,14 @@ func TestInsertArea(t *testing.T) {
 func TestUpdateArea(t *testing.T) {
 	var dbConn *sql.DB
 
-	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -318,7 +319,7 @@ func TestUpdateArea(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -328,28 +329,28 @@ func TestUpdateArea(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -357,7 +358,7 @@ func TestUpdateArea(t *testing.T) {
 	if repoArea, err = repositories.NewAreaMySQLRepository(dbConn); err != nil {
 		t.Error(err)
 	}
-	for _, tc := range AreasObjs {
+	for _, tc := range config.AreasObjs {
 		area := tc
 		area.Description = "asdasd"
 		area.Title = "asdasd"
@@ -372,14 +373,14 @@ func TestUpdateArea(t *testing.T) {
 func TestDeleteArea(t *testing.T) {
 	var dbConn *sql.DB
 
-	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -387,7 +388,7 @@ func TestDeleteArea(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -397,28 +398,28 @@ func TestDeleteArea(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -426,7 +427,7 @@ func TestDeleteArea(t *testing.T) {
 	if repoArea, err = repositories.NewAreaMySQLRepository(dbConn); err != nil {
 		t.Error(err)
 	}
-	for _, tc := range AreasObjs {
+	for _, tc := range config.AreasObjs {
 		area := tc
 		area.Description = "asdasd"
 		area.Title = "asdasd"
@@ -440,14 +441,14 @@ func TestDeleteArea(t *testing.T) {
 func TestGetAreasByIds(t *testing.T) {
 	var dbConn *sql.DB
 
-	err := database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql")
+	err := database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql")
 	if err != nil {
 		t.Fatal(err)
 	}
 
 	defer func() {
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Class.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -455,7 +456,7 @@ func TestGetAreasByIds(t *testing.T) {
 			t.Fatal(err)
 		}
 
-		if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetDelete(), "mysql"); err != nil {
+		if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetDelete(), "mysql"); err != nil {
 			t.Fatal(err)
 		}
 
@@ -465,28 +466,28 @@ func TestGetAreasByIds(t *testing.T) {
 
 	}()
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.User.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.User.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
-	for i := 0; i < len(Users); i++ {
-		_, err = dbConn.Exec(Users[i])
+	for i := 0; i < len(config.Users); i++ {
+		_, err = dbConn.Exec(config.Users[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetInsert(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
-	for i := 0; i < len(Area); i++ {
-		_, err = dbConn.Exec(Area[i])
+	for i := 0; i < len(config.Area); i++ {
+		_, err = dbConn.Exec(config.Area[i])
 		if err != nil {
 			t.Fatal(err)
 		}
 	}
 
-	if err = database.InitDatabaseConn(&dbConn, DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
+	if err = database.InitDatabaseConn(&dbConn, config.DatabaseConn.Area.GetSelect(), "mysql"); err != nil {
 		t.Fatal(err)
 	}
 
@@ -495,13 +496,13 @@ func TestGetAreasByIds(t *testing.T) {
 		t.Error(err)
 	}
 	var areas []models.Area
-	for i := 0; i < len(AreasObjs); i++ {
-		areas = append(areas, models.Area{Id: AreasObjs[i].Id})
+	for i := 0; i < len(config.AreasObjs); i++ {
+		areas = append(areas, models.Area{Id: config.AreasObjs[i].Id})
 	}
 	if err = repoArea.GetAreasByIds(areas); err != nil {
 		t.Errorf("[GetAreasByIds], %v", err)
 	}
-	for _, tc := range AreasObjs {
+	for _, tc := range config.AreasObjs {
 		for _, area := range areas {
 			if area.Id == tc.Id && (area.OwnerId != tc.OwnerId ||
 				strings.Compare(area.CreationDatetime.String()[:19], tc.CreationDatetime.String()[:19]) != 0 ||

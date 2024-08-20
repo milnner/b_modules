@@ -8,7 +8,7 @@ import (
 
 func TestGenerateToken(t *testing.T) {
 	// Crie uma instância de JWTokenizator com uma chave secreta de teste
-	tokenizator := tokens.NewJWTokenizator("teste-string")
+	tokenizator := tokens.NewUserJWTokenizator("teste-string")
 
 	// Defina as reivindicações de teste
 	claims := map[string]interface{}{
@@ -32,7 +32,7 @@ func TestGenerateToken(t *testing.T) {
 
 func TestValidateToken(t *testing.T) {
 	// Crie uma instância de JWTokenizator com uma chave secreta de teste
-	tokenizator := tokens.NewJWTokenizator("teste-string")
+	tokenizator := tokens.NewUserJWTokenizator("teste-string")
 
 	// Gere um token de teste
 	claims := map[string]interface{}{
