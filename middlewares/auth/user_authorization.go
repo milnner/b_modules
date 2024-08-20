@@ -1,7 +1,6 @@
 package auth
 
 import (
-	"fmt"
 	"net/http"
 
 	"github.com/milnner/b_modules/models"
@@ -32,7 +31,6 @@ func (u *UserAuthorizationMiddleware) Handler(next http.Handler) http.Handler {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}
-		fmt.Println("Passou")
 
 		next.ServeHTTP(w, r)
 	})
