@@ -75,7 +75,7 @@ func TestGetAreasIdsByOwnerId(t *testing.T) {
 		t.Error(err)
 	}
 	area := models.Area{OwnerId: config.AreasObjs[0].OwnerId}
-	ids, err := repoArea.GetAreasIdsByOwnerId(&area)
+	ids, err := repoArea.GetAreaIdsByOwnerId(&area)
 	if err != nil {
 		t.Errorf("[GetAreasIdsByOwnerId] %v", err)
 	}

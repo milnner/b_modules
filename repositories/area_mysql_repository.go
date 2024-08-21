@@ -41,6 +41,31 @@ func (u *AreaMySQLRepository) GetAreaById(area *models.Area) (err error) {
 	return err
 }
 
+func (u *AreaMySQLRepository) GetAreasByOwnerId(areas []models.Area, user *models.User) (err error) {
+	var (
+		row              *sql.Rows
+		creationDatetime string
+	)
+	statement := "SELECT `title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` WHERE `owner_id`=?"
+
+	if row, err = u.db.Query(statement, user.Id); err != nil {
+		return err
+	}
+
+	for row.Next() {
+		var area models.Area
+
+		if err := row.Scan(&area.Title, &area.Description, &area.OwnerId, &creationDatetime, &area.Activated); err != nil {
+			return err
+		}
+		if area.CreationDatetime, err = time.Parse(time.DateTime, creationDatetime); err != nil {
+			return err
+		}
+		areas = append(areas, area)
+	}
+	return err
+}
+
 func (u *AreaMySQLRepository) GetUserIdsByAreaId(area *models.Area) (areaIds []int, err error) {
 	var (
 		row *sql.Rows
@@ -110,7 +135,7 @@ func (u *AreaMySQLRepository) GetAreasByIds(areas []models.Area) (err error) {
 	return nil
 }
 
-func (u *AreaMySQLRepository) GetAreasIdsByOwnerId(area *models.Area) (areaIds []int, err error) {
+func (u *AreaMySQLRepository) GetAreaIdsByOwnerId(area *models.Area) (areaIds []int, err error) {
 	var (
 		row *sql.Rows
 		id  int
