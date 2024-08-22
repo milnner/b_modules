@@ -1,19 +1,8 @@
 package apptypes
 
-type UserClassPermission string
-
-func (u UserClassPermission) Equals(o UserClassPermission) bool {
-	return string(u) == string(o)
-}
-
-const (
-	write UserClassPermission = "read"
-	read  UserClassPermission = "write"
-)
-
 type userClassPermissions struct {
-	write UserClassPermission
-	read  UserClassPermission
+	write Permission
+	read  Permission
 }
 
 var UserClassPermissions = userClassPermissions{

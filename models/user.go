@@ -11,20 +11,20 @@ import (
 type Users []User
 
 type User struct {
-	Id        int                          `json:"id"`
-	Name      string                       `json:"name"`
-	Surname   string                       `json:"surname"`
-	Email     string                       `json:"email"`
-	Professor uint8                        `json:"professor"`
-	EntryDate time.Time                    `json:"entryDate"`
-	BournDate time.Time                    `json:"bournDate"`
-	Sex       apptypes.Sex                 `json:"sex"`
-	Permision apptypes.UserClassPermission `json:"permission"`
-	Hash      string                       `json:"hash"`
-	Activated uint8                        `json:"activated"`
+	Id        int                 `json:"id"`
+	Name      string              `json:"name"`
+	Surname   string              `json:"surname"`
+	Email     string              `json:"email"`
+	Professor uint8               `json:"professor"`
+	EntryDate time.Time           `json:"entryDate"`
+	BournDate time.Time           `json:"bournDate"`
+	Sex       apptypes.Sex        `json:"sex"`
+	Permision apptypes.Permission `json:"permission"`
+	Hash      string              `json:"hash"`
+	Activated uint8               `json:"activated"`
 }
 
-func NewUser(id int, name string, surname string, email string, professor uint8, entryDate time.Time, bournDate time.Time, permision apptypes.UserClassPermission, sex string, hash string, activated uint8) *User {
+func NewUser(id int, name string, surname string, email string, professor uint8, entryDate time.Time, bournDate time.Time, permision apptypes.Permission, sex string, hash string, activated uint8) *User {
 	return &User{Id: id, Name: name, Surname: surname, Email: email, Professor: professor, EntryDate: entryDate, BournDate: bournDate, Sex: apptypes.Sex(sex), Hash: hash, Activated: activated, Permision: permision}
 
 }

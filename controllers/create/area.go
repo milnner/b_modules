@@ -5,7 +5,6 @@ import (
 	"log"
 	"net/http"
 
-	"github.com/milnner/b_modules/database"
 	"github.com/milnner/b_modules/models"
 	iRepositories "github.com/milnner/b_modules/repositories/interfaces"
 
@@ -15,15 +14,13 @@ import (
 )
 
 type CreateAreaController struct {
-	*database.DatabaseConn
 	*log.Logger
-	dbDriver string
 	tkz      tokens.IJWTokenizator
 	areaRepo iRepositories.IAreaRepository
 }
 
-func NewCreateAreaController(areaRepo iRepositories.IAreaRepository, logger *log.Logger, tkz tokens.IJWTokenizator, dbDriver string) *CreateAreaController {
-	return &CreateAreaController{dbDriver: dbDriver, areaRepo: areaRepo, Logger: logger, tkz: tkz}
+func NewCreateAreaController(areaRepo iRepositories.IAreaRepository, logger *log.Logger, tkz tokens.IJWTokenizator) *CreateAreaController {
+	return &CreateAreaController{Logger: logger, tkz: tkz, areaRepo: areaRepo}
 }
 
 func (u *CreateAreaController) Handler(w http.ResponseWriter, r *http.Request) {

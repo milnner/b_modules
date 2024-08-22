@@ -7,7 +7,7 @@ type SignUpUser struct {
 	Professor  uint8  `json:"professor"`
 	EntryDate  string `json:"entryDate"`
 	BournDate  string `json:"bournDate"`
-	Permission UserClassPermission
+	Permission Permission
 	Sex        Sex    `json:"sex"`
 	Password   string `json:"password"`
 }
