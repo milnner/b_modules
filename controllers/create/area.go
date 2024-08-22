@@ -27,16 +27,13 @@ func NewCreateAreaController(areaRepo iRepositories.IAreaRepository, logger *log
 }
 
 func (u *CreateAreaController) Handler(w http.ResponseWriter, r *http.Request) {
-	token := tokens.ExtractTokenFromRequest(r)
-	if token == "" {
-		http.Error(w, "Missing Token", http.StatusUnauthorized)
-		return
-	}
-
 	user := models.User{}
-	authorizationSvc := authSvc.NewAuthorizarionSvc(&user, token, u.tkz)
+	if err := authSvc.
+		NewAuthorizarionSvc(&user,
+			r,
+			u.tkz).Run(); err != nil ||
+		user.Professor == 1 {
 
-	if err := authorizationSvc.Run(); err != nil || user.Professor == 1 {
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}

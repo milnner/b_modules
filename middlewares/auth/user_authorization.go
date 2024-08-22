@@ -17,17 +17,13 @@ func NewUserAuthorizationMiddleware(tkz tokens.IJWTokenizator) *UserAuthorizatio
 }
 func (u *UserAuthorizationMiddleware) Handler(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		// Extrair o token da requisição
-		token := tokens.ExtractTokenFromRequest(r)
-		if token == "" {
-			http.Error(w, "Invalid or Missing Token", http.StatusBadRequest)
-			return
-		}
-
 		user := models.User{}
-		authorizationSvc := authSvc.NewAuthorizarionSvc(&user, token, u.tkz)
+		if err := authSvc.
+			NewAuthorizarionSvc(&user,
+				r,
+				u.tkz).Run(); err != nil ||
+			user.Professor == 1 {
 
-		if err := authorizationSvc.Run(); err != nil {
 			http.Error(w, err.Error(), http.StatusUnauthorized)
 			return
 		}

@@ -17,8 +17,7 @@ import (
 )
 
 func TestDeleteUser(t *testing.T) {
-	config.SetDBData()
-	config.SetRootDatabaseConn()
+
 	var (
 		err    error
 		dbConn *sql.DB

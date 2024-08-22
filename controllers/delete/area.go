@@ -32,28 +32,20 @@ func NewDeleteAreaController(areaRepo iRepositories.IAreaRepository,
 }
 
 func (u *DeleteAreaController) Handler(w http.ResponseWriter, r *http.Request) {
-	var token string
-	if token = tokens.
-		ExtractTokenFromRequest(r); token == "" {
-		http.Error(w, "Missing Token", http.StatusUnauthorized)
-		return
-	}
-
 	user := models.User{}
-
 	if err := authSvc.
 		NewAuthorizarionSvc(&user,
-			token,
-			u.tkz).
-		Run(); err != nil {
+			r,
+			u.tkz).Run(); err != nil ||
+		user.Professor == 1 {
+
 		http.Error(w, err.Error(), http.StatusUnauthorized)
 		return
 	}
 
-	var err error
 	area := models.Area{}
 
-	if err = json.
+	if err := json.
 		NewDecoder(r.Body).
 		Decode(&area); err != nil {
 		http.Error(w, err.Error(), http.StatusBadRequest)
@@ -62,7 +54,7 @@ func (u *DeleteAreaController) Handler(w http.ResponseWriter, r *http.Request) {
 
 	area.OwnerId = user.Id
 
-	if err = deleteSvc.
+	if err := deleteSvc.
 		NewDeleteAreaSvc(&area,
 			u.areaRepo,
 			u.Logger).
