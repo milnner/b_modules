@@ -24,9 +24,9 @@ func (u *AreaMySQLRepository) GetAreaById(area *models.Area) (err error) {
 		row              *sql.Rows
 		creationDatetime string
 	)
-	statement := "SELECT `title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` WHERE `id`=?"
+	statement := "SELECT `title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` a WHERE (`id`=? and `owner_id`=?) or (`id`=? and EXISTS (SELECT 1 FROM `user_has_area_access` p WHERE p.area_id = a.id AND p.user_id = ? AND p.activated = 1))"
 
-	if row, err = u.db.Query(statement, area.Id); err != nil {
+	if row, err = u.db.Query(statement, area.Id, area.OwnerId, area.Id, area.OwnerId); err != nil {
 		return err
 	}
 

@@ -52,12 +52,6 @@ func (u *CreateAreaController) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	var jsonArea []byte
-	if jsonArea, err = json.Marshal(area); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
-		return
-	}
-
 	w.WriteHeader(http.StatusCreated)
-	w.Write(jsonArea)
+	w.Write([]byte("{}"))
 }

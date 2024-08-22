@@ -36,3 +36,12 @@ func sortAreaByField(slice []Area, fieldName string) {
 		return fieldI.Int() < fieldJ.Int()
 	})
 }
+
+func (a Area) Equals(other Area) bool {
+	return a.Id == other.Id &&
+		a.Title == other.Title &&
+		a.Description == other.Description &&
+		a.OwnerId == other.OwnerId &&
+		a.CreationDatetime.Equal(other.CreationDatetime) &&
+		a.Activated == other.Activated
+}

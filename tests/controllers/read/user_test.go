@@ -16,8 +16,7 @@ import (
 )
 
 func TestReadUser(t *testing.T) {
-	config.SetDBData()
-	config.SetRootDatabaseConn()
+
 	var (
 		err    error
 		dbConn *sql.DB
