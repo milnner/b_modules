@@ -83,7 +83,7 @@ func TestCreateArea(t *testing.T) {
 		return
 	}
 
-	ctrl := createCtrl.NewCreateAreaController(areaRepo, config.Logger, tkz, "mysql")
+	ctrl := createCtrl.NewCreateAreaController(areaRepo, config.Logger, tkz)
 
 	var buff []byte
 	body := bytes.NewBuffer(buff)
