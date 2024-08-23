@@ -153,7 +153,7 @@ func TestReadUserIdsByAreaId(t *testing.T) {
 	req = httptest.NewRequest("POST", "/", body)
 	req.Header.Set("Authorization", "Bearer invalid_token")
 	ctrl.Handler(wr, req)
-	if wr.Result().StatusCode == http.StatusNoContent {
+	if wr.Result().StatusCode != http.StatusUnauthorized {
 		t.Errorf("Ok, but need to be Not Ok, body  %v", wr.Body.String())
 	}
 
