@@ -142,7 +142,7 @@ func TestGetAreaById(t *testing.T) {
 		t.Error(err)
 	}
 	for _, tc := range config.AreasObjs {
-		area := models.Area{Id: tc.Id}
+		area := models.Area{Id: tc.Id, OwnerId: tc.OwnerId}
 		if err = repoArea.GetAreaById(&area); err != nil {
 			t.Errorf("[GetAreaById] %v", err)
 		}
@@ -497,7 +497,7 @@ func TestGetAreasByIds(t *testing.T) {
 	}
 	var areas []models.Area
 	for i := 0; i < len(config.AreasObjs); i++ {
-		areas = append(areas, models.Area{Id: config.AreasObjs[i].Id})
+		areas = append(areas, models.Area{Id: config.AreasObjs[i].Id, OwnerId: config.AreasObjs[i].OwnerId})
 	}
 	if err = repoArea.GetAreasByIds(areas); err != nil {
 		t.Errorf("[GetAreasByIds], %v", err)

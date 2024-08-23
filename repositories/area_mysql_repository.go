@@ -71,9 +71,9 @@ func (u *AreaMySQLRepository) GetUserIdsByAreaId(area *models.Area) (areaIds []i
 		row *sql.Rows
 		id  int
 	)
-	statement := "SELECT `user_id` FROM `user_has_area_access` WHERE `area_id`=?"
+	statement := "SELECT `user_id` FROM `user_has_area_access` p WHERE `area_id` = ? AND EXISTS ( SELECT 1 FROM `user_has_area_access` p2 WHERE p2.area_id = p.area_id AND p2.user_id = ? AND p2.activated = 1 )"
 
-	if row, err = u.db.Query(statement, area.Id); err != nil {
+	if row, err = u.db.Query(statement, area.Id, area.OwnerId); err != nil {
 		return nil, err
 	}
 
