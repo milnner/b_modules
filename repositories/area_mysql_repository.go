@@ -24,14 +24,14 @@ func (u *AreaMySQLRepository) GetAreaById(area *models.Area) (err error) {
 		row              *sql.Rows
 		creationDatetime string
 	)
-	statement := "SELECT `title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` a WHERE (`id`=? and `owner_id`=?) or (`id`=? and EXISTS (SELECT 1 FROM `user_has_area_access` p WHERE p.area_id = a.id AND p.user_id = ? AND p.activated = 1))"
+	statement := "SELECT `id`, `title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` a WHERE (`id`=? and `owner_id`=?) or (`id`=? and EXISTS (SELECT 1 FROM `user_has_area_access` p WHERE p.area_id = a.id AND p.user_id = ? AND p.activated = 1))"
 
 	if row, err = u.db.Query(statement, area.Id, area.OwnerId, area.Id, area.OwnerId); err != nil {
 		return err
 	}
 
 	if row.Next() {
-		if err := row.Scan(&area.Title, &area.Description, &area.OwnerId, &creationDatetime, &area.Activated); err != nil {
+		if err := row.Scan(&area.Id, &area.Title, &area.Description, &area.OwnerId, &creationDatetime, &area.Activated); err != nil {
 			return err
 		}
 		if area.CreationDatetime, err = time.Parse(time.DateTime, creationDatetime); err != nil {
@@ -41,12 +41,12 @@ func (u *AreaMySQLRepository) GetAreaById(area *models.Area) (err error) {
 	return err
 }
 
-func (u *AreaMySQLRepository) GetAreasByOwnerId(areas []models.Area, user *models.User) (err error) {
+func (u *AreaMySQLRepository) GetAreasByOwnerId(areas *[]models.Area, user *models.User) (err error) {
 	var (
 		row              *sql.Rows
 		creationDatetime string
 	)
-	statement := "SELECT `title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` WHERE `owner_id`=?"
+	statement := "SELECT `id`,`title`, `description`, `owner_id`, `creation_datetime`, `activated` FROM `area` WHERE `owner_id`=?"
 
 	if row, err = u.db.Query(statement, user.Id); err != nil {
 		return err
@@ -55,13 +55,13 @@ func (u *AreaMySQLRepository) GetAreasByOwnerId(areas []models.Area, user *model
 	for row.Next() {
 		var area models.Area
 
-		if err := row.Scan(&area.Title, &area.Description, &area.OwnerId, &creationDatetime, &area.Activated); err != nil {
+		if err := row.Scan(&area.Id, &area.Title, &area.Description, &area.OwnerId, &creationDatetime, &area.Activated); err != nil {
 			return err
 		}
 		if area.CreationDatetime, err = time.Parse(time.DateTime, creationDatetime); err != nil {
 			return err
 		}
-		areas = append(areas, area)
+		*areas = append(*areas, area)
 	}
 	return err
 }
@@ -71,9 +71,9 @@ func (u *AreaMySQLRepository) GetUserIdsByAreaId(area *models.Area) (areaIds []i
 		row *sql.Rows
 		id  int
 	)
-	statement := "SELECT `user_id` FROM `user_has_area_access` p WHERE `area_id` = ? AND EXISTS ( SELECT 1 FROM `user_has_area_access` p2 WHERE p2.area_id = p.area_id AND p2.user_id = ? AND p2.activated = 1 )"
+	statement := "SELECT `user_id` FROM `user_has_area_access` p WHERE `area_id` = ? AND (EXISTS ( SELECT 1 FROM `user_has_area_access` p2 WHERE p2.area_id = p.area_id AND p2.user_id = ? AND p2.activated = 1) or EXISTS ( SELECT 1 FROM `area` a WHERE a.owner_id=? AND a.activated = 1))"
 
-	if row, err = u.db.Query(statement, area.Id, area.OwnerId); err != nil {
+	if row, err = u.db.Query(statement, area.Id, area.OwnerId, area.OwnerId); err != nil {
 		return nil, err
 	}
 

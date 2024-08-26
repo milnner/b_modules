@@ -13,22 +13,22 @@ import (
 	"github.com/milnner/b_modules/tokens"
 )
 
-type ReadAreasByOwnerController struct {
+type ReadAreasByOwnerIdController struct {
 	*database.DatabaseConn
 	*log.Logger
 	tkz      tokens.IJWTokenizator
 	areaRepo iRepositories.IAreaRepository
 }
 
-func NewReadAreasByOwnerController(areaRepo iRepositories.IAreaRepository,
+func NewReadAreasByOwnerIdController(areaRepo iRepositories.IAreaRepository,
 	logger *log.Logger,
-	tkz tokens.IJWTokenizator) *ReadAreasByOwnerController {
-	return &ReadAreasByOwnerController{
+	tkz tokens.IJWTokenizator) *ReadAreasByOwnerIdController {
+	return &ReadAreasByOwnerIdController{
 		areaRepo: areaRepo,
 		Logger:   logger,
 		tkz:      tkz}
 }
-func (u *ReadAreasByOwnerController) Handler(w http.ResponseWriter, r *http.Request) {
+func (u *ReadAreasByOwnerIdController) Handler(w http.ResponseWriter, r *http.Request) {
 	user := models.User{}
 	if err := authSvc.
 		NewAuthorizarionSvc(&user,
