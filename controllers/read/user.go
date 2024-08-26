@@ -39,7 +39,7 @@ func (u *ReadUserController) Handler(w http.ResponseWriter, r *http.Request) {
 
 	var jsonUser []byte
 	if jsonUser, err = json.Marshal(user); err != nil {
-		http.Error(w, err.Error(), http.StatusBadRequest)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

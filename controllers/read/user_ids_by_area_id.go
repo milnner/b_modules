@@ -71,7 +71,7 @@ func (u *ReadUserIdsByAreaIdController) Handler(w http.ResponseWriter, r *http.R
 	if err = json.
 		NewEncoder(w).
 		Encode(userIds); err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

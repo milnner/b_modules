@@ -62,8 +62,10 @@ func (u *ReadAreaController) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	if err = json.NewEncoder(w).Encode(area); err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+	if err = json.
+		NewEncoder(w).
+		Encode(area); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 	w.WriteHeader(http.StatusOK)

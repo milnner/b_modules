@@ -72,7 +72,7 @@ func (u *ReadAreaPermissionController) Handler(w http.ResponseWriter, r *http.Re
 
 	if err = json.NewEncoder(w).
 		Encode(userHasAreaAccess.User); err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
 

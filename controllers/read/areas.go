@@ -64,9 +64,11 @@ func (u *ReadAreasController) Handler(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusNoContent)
 		return
 	}
-	w.WriteHeader(http.StatusOK)
+
 	if err = json.NewEncoder(w).Encode(areas); err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}
+	w.WriteHeader(http.StatusOK)
+
 }
