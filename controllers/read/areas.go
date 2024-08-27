@@ -61,7 +61,7 @@ func (u *ReadAreasController) Handler(w http.ResponseWriter, r *http.Request) {
 			u.areaRepo,
 			u.Logger).
 		Run(); err != nil {
-		http.Error(w, err.Error(), http.StatusNoContent)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

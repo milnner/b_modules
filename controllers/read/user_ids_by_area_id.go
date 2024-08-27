@@ -59,7 +59,7 @@ func (u *ReadUserIdsByAreaIdController) Handler(w http.ResponseWriter, r *http.R
 			u.areaRepo,
 			u.Logger).
 		Run(); err != nil {
-		http.Error(w, err.Error(), http.StatusNotFound)
+		http.Error(w, err.Error(), http.StatusBadRequest)
 		return
 	}
 

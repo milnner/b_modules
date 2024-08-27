@@ -62,6 +62,10 @@ func (u *ReadAreaController) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if area.Activated == 0 {
+		http.Error(w, "", http.StatusNotFound)
+	}
+
 	if err = json.
 		NewEncoder(w).
 		Encode(area); err != nil {

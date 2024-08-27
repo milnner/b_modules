@@ -91,7 +91,7 @@ func TestReadAreasByOwnerId(t *testing.T) {
 		return
 	}
 
-	ctrl := readCtrl.NewReadAreasByOwnerController(areaRepo, config.Logger, tkz)
+	ctrl := readCtrl.NewReadAreasByOwnerIdController(areaRepo, config.Logger, tkz)
 
 	wr := httptest.NewRecorder()
 	req := httptest.NewRequest("POST", "/", nil)

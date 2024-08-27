@@ -53,7 +53,7 @@ func (u *ReadAreasByOwnerIdController) Handler(w http.ResponseWriter, r *http.Re
 	}
 
 	if len(areas) == 0 {
-		w.WriteHeader(http.StatusNoContent)
+		w.WriteHeader(http.StatusNotFound)
 		return
 	}
 

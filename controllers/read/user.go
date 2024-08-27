@@ -37,6 +37,10 @@ func (u *ReadUserController) Handler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	if user.Hash == "" {
+		http.Error(w, "", http.StatusNotFound)
+	}
+
 	var jsonUser []byte
 	if jsonUser, err = json.Marshal(user); err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
