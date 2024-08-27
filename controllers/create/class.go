@@ -2,7 +2,6 @@ package create
 
 import (
 	"encoding/json"
-	"fmt"
 	"log"
 	"net/http"
 
@@ -71,7 +70,6 @@ func (u *CreateClassController) Handler(w http.ResponseWriter, r *http.Request) 
 		http.Error(w, "", http.StatusUnauthorized)
 		return
 	}
-	fmt.Println("Controller ", userHasAreaAccess.User)
 
 	class.UserCreatorId = user.Id
 	if err = createSvc.
