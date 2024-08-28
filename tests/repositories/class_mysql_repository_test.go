@@ -679,7 +679,7 @@ func TestGetClassIdsByAreaId(t *testing.T) {
 		t.Error(err)
 	}
 	var classIds []int
-	if classIds, err = repo.GetClassIdsByAreaId(&config.AreasObjs[0]); err != nil {
+	if classIds, err = repo.GetClassIdsByAreaId(&config.ClassesObjs[0]); err != nil {
 		t.Errorf("[GetClassIdsByAreaId] %v", err)
 	}
 	if len(classIds) != len(config.ClassesObjs) {

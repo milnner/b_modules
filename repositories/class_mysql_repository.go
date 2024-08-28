@@ -148,7 +148,7 @@ func (u *ClassMySQLRepository) GetClassesByIds(classes []models.Class) (err erro
 	return nil
 }
 
-func (u *ClassMySQLRepository) GetClassIdsByAreaId(area *models.Area) (classIds []int, err error) {
+func (u *ClassMySQLRepository) GetClassIdsByAreaId(class *models.Class) (classIds []int, err error) {
 	var (
 		id  int
 		row *sql.Rows
@@ -159,7 +159,7 @@ func (u *ClassMySQLRepository) GetClassIdsByAreaId(area *models.Area) (classIds 
 		err = row.Close()
 	}()
 
-	if row, err = u.db.Query(query, area.Id); err != nil {
+	if row, err = u.db.Query(query, class.AreaId); err != nil {
 		return nil, err
 	}
 

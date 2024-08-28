@@ -5,7 +5,7 @@ import "github.com/milnner/b_modules/models"
 type IClassRepository interface {
 	GetClassById(*models.Class) error
 	GetClassesByIds([]models.Class) error
-	GetClassIdsByAreaId(*models.Area) ([]int, error)
+	GetClassIdsByAreaId(*models.Class) ([]int, error)
 	Insert(*models.Class) error
 	AddStudentUser(*models.Class, *models.User) error
 	RemoveStudentUser(*models.Class, *models.User) error
