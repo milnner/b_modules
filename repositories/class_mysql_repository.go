@@ -50,8 +50,8 @@ func (u *ClassMySQLRepository) GetClassById(class *models.Class) (err error) {
 }
 
 func (u *ClassMySQLRepository) Update(class *models.Class) (err error) {
-	statement := "UPDATE `classes` SET  `title`=?, `description`=?, `last_update`=? WHERE `id`=?"
-	_, err = u.db.Exec(statement, class.Title, class.Description, time.Now().String()[:19], class.Id)
+	statement := "UPDATE `classes` SET  `title`=?, `description`=?, `last_update`=? WHERE `id`=? AND `area_id`=?"
+	_, err = u.db.Exec(statement, class.Title, class.Description, time.Now().String()[:19], class.Id, class.AreaId)
 	return err
 }
 
