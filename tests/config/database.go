@@ -21,7 +21,7 @@ var (
 	ContentObjs                    []models.Content
 	ClassHasUser                   []string
 	ClassHasContent                []string
-	UserCanEditeClass              []string
+	UserHasAreaAccess              []string
 	Activity                       []string
 	ImageActivity                  []string
 	ImageActivityObjs              []models.ImageActivity
@@ -113,11 +113,11 @@ func SetDBData() {
 		"INSERT INTO `class_has_content`(`id`, `class_id`, `content_id`, `position`) VALUES (4,2,3,0)",
 	}
 
-	UserCanEditeClass = []string{
-		"INSERT INTO `user_can_edit_class`(`id`, `editor_user_id`, `class_id`, `entry_date`) VALUES (1,1,1, '" + timeStr + "')",
-		"INSERT INTO `user_can_edit_class`(`id`, `editor_user_id`, `class_id`, `entry_date`) VALUES (2,2,1, '" + timeStr + "')",
-		"INSERT INTO `user_can_edit_class`(`id`, `editor_user_id`, `class_id`, `entry_date`) VALUES (3,3,1, '" + timeStr + "')",
-		"INSERT INTO `user_can_edit_class`(`id`, `editor_user_id`, `class_id`, `entry_date`) VALUES (4,2,3, '" + timeStr + "')",
+	UserHasAreaAccess = []string{
+		"INSERT INTO `user_has_area_access`(`id`, `permission`, `user_id`, `area_id`, `entry_datetime`) VALUES (1,'write',1,1, '" + timeStr + "')",
+		"INSERT INTO `user_has_area_access`(`id`, `user_id`, `area_id`, `entry_datetime`) VALUES (2,'write',2,1, '" + timeStr + "')",
+		"INSERT INTO `user_has_area_access`(`id`, `user_id`, `area_id`, `entry_datetime`) VALUES (3,'write',3,1, '" + timeStr + "')",
+		"INSERT INTO `user_has_area_access`(`id`, `user_id`, `area_id`, `entry_datetime`) VALUES (4,'write',2,3, '" + timeStr + "')",
 	}
 
 	imgStr := "0x10101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010101010"

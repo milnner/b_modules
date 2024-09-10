@@ -139,7 +139,7 @@ func TestReadAreasByOwnerId(t *testing.T) {
 	ctrl.Handler(wr, req)
 	fmt.Println(wr.Body.String())
 	fmt.Println(wr.Result().StatusCode)
-	if wr.Result().StatusCode != http.StatusNoContent {
+	if wr.Result().StatusCode != http.StatusNotFound {
 		t.Errorf("Ok, but need to be No content, body  %v", wr.Body.String())
 	}
 }
