@@ -9,6 +9,7 @@ type Content struct {
 	Description  string
 	LastUpdate   time.Time
 	AreaId       int
+	ClassId      int
 	Activated    uint8
 	Position     uint8
 }
